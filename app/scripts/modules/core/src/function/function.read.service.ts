@@ -23,10 +23,11 @@ export class FunctionsReader {
     console.log('Function Reader in the read service: ' + applicationName);
 
     return API.one('applications', applicationName)
-      .all('functionss')
+      .all('functions')
       .getList()
-      .then(() => {
+      .then((functionsReturned: any) => {
         console.log('DONE HERE ??');
+        return functionsReturned;
       });
   }
 
