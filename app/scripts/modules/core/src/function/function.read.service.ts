@@ -51,16 +51,6 @@ export class FunctionsReader {
       .withParams({ provider: cloudProvider })
       .getList();
   }
-
-  private normalizeFunctions(functions: IFunctionsSourceData): IPromise<IFunctions> {
-    return this.functionsTransformer.normalizeFunctions(functions).then((lb: IFunctions) => {
-      const nameParts: IComponentName = NameUtils.parseLoadBalancerName(lb.name);
-      lb.stack = nameParts.stack;
-      lb.detail = nameParts.freeFormDetails;
-      lb.cloudProvider = lb.cloudProvider || lb.type || lb.provider;
-      return lb;
-    });
-  }
 }
 
 export const FUNCTIONS_READ_SERVICE = 'spinnaker.core.functions.read.service';
