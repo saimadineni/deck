@@ -1,8 +1,8 @@
 import { IPromise, module } from 'angular';
 
 import { API } from 'core/api/ApiService';
-import { IComponentName, NameUtils } from 'core/naming';
-import { IFunctions, IFunctionsSourceData } from 'core/domain';
+// import { IComponentName, NameUtils } from 'core/naming';
+import { IFunctionsSourceData } from 'core/domain';
 
 export interface IFunctionsByAccount {
   name: string;
@@ -10,7 +10,7 @@ export interface IFunctionsByAccount {
     name: string;
     regions: Array<{
       name: string;
-      functionss: IFunctionsSourceData[];
+      functions: IFunctionsSourceData[];
     }>;
   }>;
 }
@@ -52,19 +52,9 @@ export class FunctionsReader {
       .withParams({ provider: cloudProvider })
       .getList();
   }
-
-  private normalizeFunctions(functions: IFunctionsSourceData): IPromise<IFunctions> {
-    return this.functionsTransformer.normalizeFunctions(functions).then((lb: IFunctions) => {
-      const nameParts: IComponentName = NameUtils.parseLoadBalancerName(lb.name);
-      lb.stack = nameParts.stack;
-      lb.detail = nameParts.freeFormDetails;
-      lb.cloudProvider = lb.cloudProvider || lb.type || lb.provider;
-      return lb;
-    });
-  }
 }
 
 export const FUNCTIONS_READ_SERVICE = 'spinnaker.core.functions.read.service';
-// tslint:disable-next-line: no-console
+
 console.log('Read Service module.ts loaded');
 module(FUNCTIONS_READ_SERVICE, []).service('functionsReader', FunctionsReader);

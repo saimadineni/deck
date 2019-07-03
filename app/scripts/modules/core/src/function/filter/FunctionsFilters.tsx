@@ -10,17 +10,17 @@ import { FilterSection } from 'core/cluster/filter/FilterSection';
 import { LoadBalancerState } from 'core/state';
 
 const poolValueCoordinates = [
-  { filterField: 'providerType', on: 'loadBalancer', localField: 'type' },
-  { filterField: 'account', on: 'loadBalancer', localField: 'account' },
-  { filterField: 'region', on: 'loadBalancer', localField: 'region' },
+  { filterField: 'providerType', on: 'functions', localField: 'type' },
+  { filterField: 'account', on: 'functions', localField: 'account' },
+  { filterField: 'region', on: 'functions', localField: 'region' },
   { filterField: 'availabilityZone', on: 'instance', localField: 'zone' },
 ];
 
-function poolBuilder(loadBalancers: any[]) {
-  const pool = chain(loadBalancers)
+function poolBuilder(functions: any[]) {
+  const pool = chain(functions)
     .map(lb => {
       const poolUnitTemplate = chain(poolValueCoordinates)
-        .filter({ on: 'loadBalancer' })
+        .filter({ on: 'functions' })
         .reduce(
           (acc, coordinate) => {
             acc[coordinate.filterField] = lb[coordinate.localField];
@@ -105,11 +105,11 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
       this.setState({ tags: LoadBalancerState.filterModel.asFilterModel.tags });
     });
 
-    if (app.loadBalancers && app.loadBalancers.loaded) {
+    if (app.functions && app.functions.loaded) {
       this.updateLoadBalancerGroups();
     }
 
-    this.loadBalancersRefreshUnsubscribe = app.loadBalancers.onRefresh(null, () => this.updateLoadBalancerGroups());
+    this.loadBalancersRefreshUnsubscribe = app.functions.onRefresh(null, () => this.updateLoadBalancerGroups());
 
     this.locationChangeUnsubscribe = $rootScope.$on('$locationChangeSuccess', () => {
       LoadBalancerState.filterModel.asFilterModel.activate();
@@ -134,7 +134,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
     const { availabilityZone, region, account } = digestDependentFilters({
       sortFilter: LoadBalancerState.filterModel.asFilterModel.sortFilter,
       dependencyOrder: ['providerType', 'account', 'region', 'availabilityZone'],
-      pool: poolBuilder(app.loadBalancers.data),
+      pool: poolBuilder(app.functions.data),
     });
 
     this.setState({
@@ -148,7 +148,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
   };
 
   private getHeadingsForOption = (option: string): string[] => {
-    return compact(uniq(map(this.props.app.loadBalancers.data, option) as string[])).sort();
+    return compact(uniq(map(this.props.app.functions.data, option) as string[])).sort();
   };
 
   private clearFilters = (): void => {
@@ -179,7 +179,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
   };
 
   public render() {
-    const loadBalancersLoaded = this.props.app.loadBalancers.loaded;
+    const loadBalancersLoaded = this.props.app.functions.loaded;
     const {
       accountHeadings,
       providerTypeHeadings,
@@ -202,7 +202,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
           >
             Clear All
           </span>
-          <FilterSection heading="Search" expanded={true} helpKey="loadBalancer.search">
+          <FilterSection heading="Search" expanded={true} helpKey="functions.search">
             <form className="form-horizontal" role="form">
               <div className="form-group nav-search">
                 <input

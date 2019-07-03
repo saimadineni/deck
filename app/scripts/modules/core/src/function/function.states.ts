@@ -51,7 +51,7 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
           regionParam: 'region',
         },
         history: {
-          type: 'functionss',
+          type: 'functions',
         },
       },
     };

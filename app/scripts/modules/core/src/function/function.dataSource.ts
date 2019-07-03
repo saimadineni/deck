@@ -25,7 +25,7 @@ module(FUNCTION_DATA_SOURCE, [FUNCTIONS_READ_SERVICE]).run([
     };
 
     const addTags = (application: Application) => {
-      EntityTagsReader.addTagsToFunctions(application);
+      //  EntityTagsReader.addTagsToFunctions(application);
     };
 
     ApplicationDataSourceRegistry.registerDataSource({

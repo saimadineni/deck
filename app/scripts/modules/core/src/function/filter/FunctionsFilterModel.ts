@@ -1,7 +1,7 @@
 import { Ng1StateDeclaration, StateParams } from '@uirouter/angularjs';
 import { $rootScope } from 'ngimport';
 
-import { ILoadBalancerGroup } from 'core/domain';
+// import { IFunctionsGroup } from 'core/domain';
 import { IFilterConfig, IFilterModel } from 'core/filterModel/IFilterModel';
 import { FilterModelService } from 'core/filterModel';
 import { UrlParser } from 'core/navigation/urlParser';
@@ -23,13 +23,13 @@ export const filterModelConfig: IFilterConfig[] = [
   },
 ];
 
-export interface ILoadBalancerFilterModel extends IFilterModel {
-  groups: ILoadBalancerGroup[];
+export interface IFunctionsFilterModel extends IFilterModel {
+  // groups: IFunctionsGroup[];
 }
 
-export class LoadBalancerFilterModel {
+export class FunctionsFilterModel {
   private mostRecentParams: any;
-  public asFilterModel: ILoadBalancerFilterModel;
+  public asFilterModel: IFunctionsFilterModel;
 
   constructor() {
     this.asFilterModel = FilterModelService.configureFilterModel(this as any, filterModelConfig);
@@ -37,34 +37,34 @@ export class LoadBalancerFilterModel {
     this.asFilterModel.activate();
   }
 
-  private isLoadBalancerState(stateName: string) {
-    return stateName === 'home.applications.application.insight.loadBalancers';
+  private isFunctionsState(stateName: string) {
+    return stateName === 'home.applications.application.insight.functions';
   }
 
-  private isLoadBalancerStateOrChild(stateName: string) {
-    return this.isLoadBalancerState(stateName) || this.isChildState(stateName);
+  private isFunctionsStateOrChild(stateName: string) {
+    return this.isFunctionsState(stateName) || this.isChildState(stateName);
   }
 
   private isChildState(stateName: string) {
-    return stateName.includes('loadBalancers.');
+    return stateName.includes('functions.');
   }
 
-  private movingToLoadBalancerState(toState: Ng1StateDeclaration) {
-    return this.isLoadBalancerStateOrChild(toState.name);
+  private movingToFunctionsState(toState: Ng1StateDeclaration) {
+    return this.isFunctionsStateOrChild(toState.name);
   }
 
-  private movingFromLoadBalancerState(toState: Ng1StateDeclaration, fromState: Ng1StateDeclaration) {
-    return this.isLoadBalancerStateOrChild(fromState.name) && !this.isLoadBalancerStateOrChild(toState.name);
+  private movingFromFunctionsState(toState: Ng1StateDeclaration, fromState: Ng1StateDeclaration) {
+    return this.isFunctionsStateOrChild(fromState.name) && !this.isFunctionsStateOrChild(toState.name);
   }
 
   private shouldRouteToSavedState(toParams: StateParams, fromState: Ng1StateDeclaration) {
-    return this.asFilterModel.hasSavedState(toParams) && !this.isLoadBalancerStateOrChild(fromState.name);
+    return this.asFilterModel.hasSavedState(toParams) && !this.isFunctionsStateOrChild(fromState.name);
   }
 
-  private fromLoadBalancersState(fromState: Ng1StateDeclaration) {
+  private fromFunctionState(fromState: Ng1StateDeclaration) {
     return (
       fromState.name.indexOf('home.applications.application.insight') === 0 &&
-      !fromState.name.includes('home.applications.application.insight.loadBalancers')
+      !fromState.name.includes('home.applications.application.insight.functions')
     );
   }
 
@@ -93,7 +93,7 @@ export class LoadBalancerFilterModel {
         fromState: Ng1StateDeclaration,
         fromParams: StateParams,
       ) => {
-        if (this.movingFromLoadBalancerState(toState, fromState)) {
+        if (this.movingFromFunctionsState(toState, fromState)) {
           this.asFilterModel.saveState(fromState, fromParams, this.mostRecentParams);
         }
       },
@@ -102,16 +102,16 @@ export class LoadBalancerFilterModel {
     $rootScope.$on(
       '$stateChangeSuccess',
       (_event, toState: Ng1StateDeclaration, toParams: StateParams, fromState: Ng1StateDeclaration) => {
-        if (this.isLoadBalancerStateOrChild(toState.name) && this.isLoadBalancerStateOrChild(fromState.name)) {
+        if (this.isFunctionsStateOrChild(toState.name) && this.isFunctionsStateOrChild(fromState.name)) {
           this.asFilterModel.applyParamsToUrl();
           return;
         }
-        if (this.movingToLoadBalancerState(toState)) {
+        if (this.movingToFunctionsState(toState)) {
           if (this.shouldRouteToSavedState(toParams, fromState)) {
             this.asFilterModel.restoreState(toParams);
           }
 
-          if (this.fromLoadBalancersState(fromState) && !this.asFilterModel.hasSavedState(toParams)) {
+          if (this.fromFunctionState(fromState) && !this.asFilterModel.hasSavedState(toParams)) {
             this.asFilterModel.clearFilters();
           }
         }
