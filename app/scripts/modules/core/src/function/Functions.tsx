@@ -1,9 +1,10 @@
 import * as React from 'react';
 // import { UISref, UISrefActive } from '@uirouter/react';
-
 // import { Application } from 'core/application/application.model';
 // import { CloudProviderRegistry } from 'core/cloudProvider';
 // import { IFunctions, IServerGroup } from 'core/domain';
+import { CreateFunctionsButton } from 'core/function/CreateFunctionsButton';
+
 
 // import { HealthCounts } from 'core/healthCounts/HealthCounts';
 // import { EntityNotifications } from 'core/entityTag/notifications/EntityNotifications';
@@ -34,8 +35,17 @@ export class Functions extends React.Component<IFunctionProps> {
     const params = {};
 
     return (
-      <div className="pod-subgroup">
-        <div className="sticky-header-2">Functions is kinda working !</div>
+      // tslint:disable-next-line: ban-comma-operator
+      <div className="main-content functions">
+        <div className="header row header-clusters">
+          <div className="col-lg-8 col-md-10">Testing</div>
+          <div className="col-lg-4 col-md-2">
+            <div className="form-inline clearfix filters" />
+            <div className="application-actions">
+              <CreateFunctionsButton app={this.props} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
