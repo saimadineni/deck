@@ -1,7 +1,7 @@
 import { Ng1StateDeclaration, StateParams } from '@uirouter/angularjs';
 import { $rootScope } from 'ngimport';
 
-import { IFunctionsGroup } from 'core/domain';
+// import { IFunctionsGroup } from 'core/domain';
 import { IFilterConfig, IFilterModel } from 'core/filterModel/IFilterModel';
 import { FilterModelService } from 'core/filterModel';
 import { UrlParser } from 'core/navigation/urlParser';
@@ -24,7 +24,7 @@ export const filterModelConfig: IFilterConfig[] = [
 ];
 
 export interface IFunctionsFilterModel extends IFilterModel {
-  groups: IFunctionsGroup[];
+  // groups: IFunctionsGroup[];
 }
 
 export class FunctionsFilterModel {

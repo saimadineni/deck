@@ -1,8 +1,8 @@
 import { IPromise, module } from 'angular';
 
 import { API } from 'core/api/ApiService';
-import { IComponentName, NameUtils } from 'core/naming';
-import { IFunctions, IFunctionsSourceData } from 'core/domain';
+// import { IComponentName, NameUtils } from 'core/naming';
+import { IFunctionsSourceData } from 'core/domain';
 
 export interface IFunctionsByAccount {
   name: string;
@@ -10,7 +10,7 @@ export interface IFunctionsByAccount {
     name: string;
     regions: Array<{
       name: string;
-      functionss: IFunctionsSourceData[];
+      functions: IFunctionsSourceData[];
     }>;
   }>;
 }
@@ -54,6 +54,6 @@ export class FunctionsReader {
 }
 
 export const FUNCTIONS_READ_SERVICE = 'spinnaker.core.functions.read.service';
-// tslint:disable-next-line: no-console
+
 console.log('Read Service module.ts loaded');
 module(FUNCTIONS_READ_SERVICE, []).service('functionsReader', FunctionsReader);
