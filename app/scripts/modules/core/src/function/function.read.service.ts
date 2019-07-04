@@ -19,8 +19,10 @@ export class FunctionReader {
   // public static $inject = ['$q', 'functionsTransformer'];
   // public constructor(private $q: IQService, private functionsTransformer: any) {}
 
+
   public loadFunctions(applicationName: string): IPromise<IFunctionSourceData[]> {
     console.log('Function Reader in the read service: ' + applicationName);
+
     return (
       API.one('applications', applicationName)
         // TODO: replace with functions endpoint.
