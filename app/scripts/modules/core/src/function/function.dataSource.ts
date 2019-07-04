@@ -17,7 +17,7 @@ module(FUNCTION_DATA_SOURCE, [FUNCTIONS_READ_SERVICE]).run([
 
     const functions = (application: Application) => {
       console.log('In the FunctionsReader Application:' + application);
-      return functionsReader.loadFunctions(application.name);
+      return functionsReader.loadFunction(application.name);
     };
 
     const addFunctions = (_application: Application, functionss: IFunctions[]) => {
