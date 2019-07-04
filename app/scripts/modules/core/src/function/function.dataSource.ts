@@ -4,23 +4,23 @@ import { ApplicationDataSourceRegistry } from 'core/application/service/Applicat
 import { INFRASTRUCTURE_KEY } from 'core/application/nav/defaultCategories';
 import { Application } from 'core/application/application.model';
 import { EntityTagsReader } from 'core/entityTag/EntityTagsReader';
-import { IFunctions } from 'core/domain';
-import { FUNCTIONS_READ_SERVICE, FunctionsReader } from 'core/function/function.read.service';
+import { IFunction } from 'core/domain';
+import { FUNCTION_READ_SERVICE, FunctionReader } from 'core/function/function.read.service';
 
 export const FUNCTION_DATA_SOURCE = 'spinnaker.core.functions.dataSource';
 console.log('DataSource module.ts loaded');
-module(FUNCTION_DATA_SOURCE, [FUNCTIONS_READ_SERVICE]).run([
+module(FUNCTION_DATA_SOURCE, [FUNCTION_READ_SERVICE]).run([
   '$q',
-  'functionsReader',
-  ($q: IQService, functionsReader: FunctionsReader) => {
-    console.log('In the FunctionsReader');
+  'functionReader',
+  ($q: IQService, functionReader: FunctionReader) => {
+    console.log('In the FunctionReader');
 
     const functions = (application: Application) => {
-      console.log('In the FunctionsReader Application:' + application);
-      return functionsReader.loadFunction(application.name);
+      console.log('In the FunctionReader Application:' + application);
+      return functionReader.loadFunctions(application.name);
     };
 
-    const addFunctions = (_application: Application, functionss: IFunctions[]) => {
+    const addFunctions = (_application: Application, functionss: IFunction[]) => {
       return $q.when(functionss);
     };
 
@@ -41,7 +41,7 @@ module(FUNCTION_DATA_SOURCE, [FUNCTIONS_READ_SERVICE]).run([
       providerField: 'cloudProvider',
       credentialsField: 'account',
       regionField: 'region',
-      description: 'Traffic distribution management between servers',
+      description: 'Serverless Compute Service.',
     });
   },
 ]);

@@ -4,9 +4,9 @@ import { StateParams } from '@uirouter/angularjs';
 import { INestedState, StateConfigProvider } from 'core/navigation';
 import { APPLICATION_STATE_PROVIDER, ApplicationStateProvider } from 'core/application';
 import { filterModelConfig } from 'core/function/filter/FunctionsFilterModel';
-import { Functions } from 'core/function/Functions';
+import { Function } from 'core/function/Function';
 
-import { FunctionsDetails } from './FunctionsDetails';
+import { FunctionDetails } from './FunctionDetails';
 // import { FunctionsFilters } from '../functions/filter/FunctionsFilters';
 
 export const FUNCTION_STATES = 'spinnaker.core.functions.states';
@@ -25,7 +25,7 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
       },
       views: {
         'detail@../insight': {
-          component: FunctionsDetails,
+          component: FunctionDetails,
           $type: 'react',
         },
       },
@@ -60,8 +60,8 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
       url: `/functions?${stateConfigProvider.paramsToQuery(filterModelConfig)}`,
       name: 'functions',
       views: {
-        nav: { component: FunctionsDetails, $type: 'react' },
-        master: { component: Functions, $type: 'react' },
+        nav: { component: FunctionDetails, $type: 'react' },
+        master: { component: Function, $type: 'react' },
       },
       params: stateConfigProvider.buildDynamicParams(filterModelConfig),
       data: {

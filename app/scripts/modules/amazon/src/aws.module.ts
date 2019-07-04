@@ -24,7 +24,7 @@ import './deploymentStrategy/rollingPush.strategy';
 import './logo/aws.logo.less';
 import { AmazonCloneServerGroupModal } from './serverGroup/configure/wizard/AmazonCloneServerGroupModal';
 import { AmazonLoadBalancerChoiceModal } from './loadBalancer/configure/AmazonLoadBalancerChoiceModal';
-import { CreateLambdaFunction } from './function/CreateLambdaFunction';
+//import { CreateLambdaFunction } from './function/CreateLambdaFunction';
 
 import { AmazonServerGroupActions } from './serverGroup/details/AmazonServerGroupActions';
 import { amazonServerGroupDetailsGetter } from './serverGroup/details/amazonServerGroupDetailsGetter';
@@ -132,7 +132,7 @@ module(AMAZON_MODULE, [
     },
     function: {
       details: '',
-      CreateLambdaFunctionModal: CreateLambdaFunction,
+      //CreateLambdaFunctionModal: CreateLambdaFunction,
     },
     securityGroup: {
       transformer: 'awsSecurityGroupTransformer',
