@@ -19,16 +19,19 @@ export class FunctionsReader {
   // public static $inject = ['$q', 'functionsTransformer'];
   // public constructor(private $q: IQService, private functionsTransformer: any) {}
 
-  public loadFunctions(applicationName: string): IPromise<IFunctionsSourceData[]> {
+  public loadFunction(applicationName: string): IPromise<IFunctionsSourceData[]> {
     console.log('Function Reader in the read service: ' + applicationName);
 
-    return API.one('applications', applicationName)
-      .all('functions')
-      .getList()
-      .then((functionsReturned: any) => {
-        console.log('DONE HERE ??');
-        return functionsReturned;
-      });
+    return (
+      API.one('applications', applicationName)
+        // TODO: replace with functions endpoint.
+        .all('loadBalancers')
+        .getList()
+        .then((functionsReturned: any) => {
+          console.log('Temporary Fix, until /functions endpoint is created in gate');
+          return functionsReturned;
+        })
+    );
   }
 
   public getFunctionsDetails(
@@ -37,7 +40,7 @@ export class FunctionsReader {
     region: string,
     name: string,
   ): IPromise<IFunctionsSourceData[]> {
-    return API.all('functionss')
+    return API.all('functions')
       .all(account)
       .all(region)
       .all(name)
@@ -48,7 +51,7 @@ export class FunctionsReader {
   public listFunctionss(cloudProvider: string): IPromise<IFunctionsByAccount[]> {
     console.log('List Functions with: ' + cloudProvider);
 
-    return API.all('functionss')
+    return API.all('functions')
       .withParams({ provider: cloudProvider })
       .getList();
   }
