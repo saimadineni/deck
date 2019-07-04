@@ -10,10 +10,6 @@ export interface IFunctionUpsertCommand extends IJob {
   cloudProvider: string;
   credentials: string;
   detail?: string;
-  healthCheckProtocol?: string;
-  healthCheck?: string;
-  healthCheckPort?: number;
-  healthCheckPath?: string;
   moniker?: IMoniker;
   region: string;
   stack?: string;

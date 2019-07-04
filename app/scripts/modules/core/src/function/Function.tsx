@@ -1,26 +1,24 @@
 import * as React from 'react';
 // import { UISref, UISrefActive } from '@uirouter/react';
-// import { Application } from 'core/application/application.model';
+import { Application } from 'core/application/application.model';
 // import { CloudProviderRegistry } from 'core/cloudProvider';
 // import { IFunctions, IServerGroup } from 'core/domain';
-import { CreateFunctionsButton } from 'core/function/CreateFunctionsButton';
-
+import { CreateFunctionButton } from 'core/function/CreateFunctionButton';
 
 // import { HealthCounts } from 'core/healthCounts/HealthCounts';
 // import { EntityNotifications } from 'core/entityTag/notifications/EntityNotifications';
 
 export interface IFunctionProps {
-  // application: Application;
-  // functions: IFunctions;
+  app: Application;
 }
 
-export class Functions extends React.Component<IFunctionProps> {
+export class Function extends React.Component<IFunctionProps> {
   // public static defaultProps: Partial<IFunctionProps> = {
   //   showServerGroups: true,
   //   showInstances: false,
   // };
 
-  public render(): React.ReactElement<Functions> {
+  public render(): React.ReactElement<Function> {
     // const { application, functions } = this.props;
     // const config = CloudProviderRegistry.getValue(functions.provider || functions.cloudProvider, 'functions');
 
@@ -42,7 +40,7 @@ export class Functions extends React.Component<IFunctionProps> {
           <div className="col-lg-4 col-md-2">
             <div className="form-inline clearfix filters" />
             <div className="application-actions">
-              <CreateFunctionsButton app={this.props} />
+              <CreateFunctionButton app={this.props.app} />
             </div>
           </div>
         </div>

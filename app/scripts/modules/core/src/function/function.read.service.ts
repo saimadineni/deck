@@ -2,42 +2,44 @@ import { IPromise, module } from 'angular';
 
 import { API } from 'core/api/ApiService';
 // import { IComponentName, NameUtils } from 'core/naming';
-import { IFunctionsSourceData } from 'core/domain';
+import { IFunctionSourceData } from 'core/domain';
 
-export interface IFunctionsByAccount {
+export interface IFunctionByAccount {
   name: string;
   accounts: Array<{
     name: string;
     regions: Array<{
       name: string;
-      functions: IFunctionsSourceData[];
+      functions: IFunctionSourceData[];
     }>;
   }>;
 }
 
-export class FunctionsReader {
+export class FunctionReader {
   // public static $inject = ['$q', 'functionsTransformer'];
   // public constructor(private $q: IQService, private functionsTransformer: any) {}
 
-  public loadFunctions(applicationName: string): IPromise<IFunctionsSourceData[]> {
+  public loadFunctions(applicationName: string): IPromise<IFunctionSourceData[]> {
     console.log('Function Reader in the read service: ' + applicationName);
-
-    return API.one('applications', applicationName)
-      .all('functions')
-      .getList()
-      .then((functionsReturned: any) => {
-        console.log('DONE HERE ??');
-        return functionsReturned;
-      });
+    return (
+      API.one('applications', applicationName)
+        // TODO: replace with functions endpoint.
+        .all('loadBalancers')
+        .getList()
+        .then((functionsReturned: any) => {
+          console.log('Temporary Fix, until /functions endpoint is created in gate');
+          return functionsReturned;
+        })
+    );
   }
 
-  public getFunctionsDetails(
+  public getFunctionDetails(
     cloudProvider: string,
     account: string,
     region: string,
     name: string,
-  ): IPromise<IFunctionsSourceData[]> {
-    return API.all('functionss')
+  ): IPromise<IFunctionSourceData[]> {
+    return API.all('functions')
       .all(account)
       .all(region)
       .all(name)
@@ -45,16 +47,16 @@ export class FunctionsReader {
       .get();
   }
 
-  public listFunctionss(cloudProvider: string): IPromise<IFunctionsByAccount[]> {
+  public listFunctions(cloudProvider: string): IPromise<IFunctionByAccount[]> {
     console.log('List Functions with: ' + cloudProvider);
 
-    return API.all('functionss')
+    return API.all('functions')
       .withParams({ provider: cloudProvider })
       .getList();
   }
 }
 
-export const FUNCTIONS_READ_SERVICE = 'spinnaker.core.functions.read.service';
+export const FUNCTION_READ_SERVICE = 'spinnaker.core.function.read.service';
 
 console.log('Read Service module.ts loaded');
-module(FUNCTIONS_READ_SERVICE, []).service('functionsReader', FunctionsReader);
+module(FUNCTION_READ_SERVICE, []).service('functionReader', FunctionReader);

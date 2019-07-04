@@ -45,7 +45,7 @@ import { HELP_MODULE } from './help/help.module';
 import { INSIGHT_MODULE } from './insight/insight.module';
 import { INTERCEPTOR_MODULE } from './interceptor/interceptor.module';
 import { LOAD_BALANCER_MODULE } from './loadBalancer/loadBalancer.module';
-import { FUNCTIONS_MODULE } from './function/function.module';
+import { FUNCTION_MODULE } from './function/function.module';
 
 import { NETWORK_INTERCEPTOR } from './api/network.interceptor';
 
@@ -114,7 +114,7 @@ module(CORE_MODULE, [
 
   LABEL_FILTER_COMPONENT,
   LOAD_BALANCER_MODULE,
-  FUNCTIONS_MODULE,
+  FUNCTION_MODULE,
 
   require('./modal/modal.module').name,
 

@@ -1,41 +1,41 @@
 import * as React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-import { ILoadBalancerModalProps, ModalClose, ReactModal, noop } from '@spinnaker/core';
-import { IAmazonLoadBalancerConfig, LoadBalancerTypes } from './FunctionTypes';
+import { IFunctionModalProps, ModalClose, ReactModal, noop } from '@spinnaker/core';
+import { IAmazonFunctionConfig, FunctionTypes } from './FunctionTypes';
 
-export class FunctionsChoiceModal extends React.Component<ILoadBalancerModalProps> {
-  public static defaultProps: Partial<ILoadBalancerModalProps> = {
+export class FunctionsChoiceModal extends React.Component<IFunctionModalProps> {
+  public static defaultProps: Partial<IFunctionModalProps> = {
     closeModal: noop,
     dismissModal: noop,
   };
 
-  public static show(props: ILoadBalancerModalProps): Promise<void> {
+  public static show(props: IFunctionModalProps): Promise<void> {
     return ReactModal.show(FunctionsChoiceModal, {
       ...props,
       className: 'create-pipeline-modal-overflow-visible',
     });
   }
 
-  constructor(props: ILoadBalancerModalProps) {
+  constructor(props: IFunctionModalProps) {
     super(props);
     this.state = {
-      choices: LoadBalancerTypes,
-      selectedChoice: LoadBalancerTypes[0],
+      choices: FunctionTypes,
+      selectedChoice: FunctionTypes[0],
     };
   }
 
-  public choiceSelected(choice: IAmazonLoadBalancerConfig): void {
+  public choiceSelected(choice: IAmazonFunctionConfig): void {
     this.setState({ selectedChoice: choice });
   }
 
   private choose = (): void => {
-    const { children, ...loadBalancerProps } = this.props;
+    const { children, ...functionProps } = this.props;
     this.close();
     this.state.selectedChoice.component
-      .show(loadBalancerProps)
-      .then(loadBalancer => {
-        this.props.closeModal(loadBalancer);
+      .show(functionProps)
+      .then(funct => {
+        this.props.closeModal(funct);
       })
       .catch(() => {});
   };
@@ -62,7 +62,7 @@ export class FunctionsChoiceModal extends React.Component<ILoadBalancerModalProp
                   className={`card ${selectedChoice === choice ? 'active' : ''}`}
                   onClick={() => this.choiceSelected(choice)}
                 >
-                  <h3 className="load-balancer-label">{choice.label}</h3>
+                  <h3 className="function-label">{choice.label}</h3>
                   <h3>({choice.sublabel})</h3>
                   <div>{choice.description}</div>
                 </div>
