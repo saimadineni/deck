@@ -46,22 +46,23 @@ export class Function extends React.Component<IFunctionProps, IFunctionState> {
       // tslint:disable-next-line: ban-comma-operator
       <div className="main-content functions">
         <div className="header row header-clusters">
-          <div className="col-lg-8 col-md-10">Testing</div>
+          <div className="col-lg-8 col-md-10">
+            <button
+              onClick={() => {
+                this.setState(state => {
+                  return { isFunctionShowing: !state.isFunctionShowing };
+                });
+              }}
+            >
+              list functions
+            </button>
+            {this.state.isFunctionShowing && <FunctionImport />}
+            {/* <FunctionImport /> */}
+          </div>
           <div className="col-lg-4 col-md-2">
             <div className="form-inline clearfix filters" />
             <div className="application-actions">
               <CreateFunctionButton app={this.props.app} />
-              <button
-                onClick={() => {
-                  this.setState(state => {
-                    return { isFunctionShowing: !state.isFunctionShowing };
-                  });
-                }}
-              >
-                list functions
-              </button>
-              {this.state.isFunctionShowing && <FunctionImport />}
-              {/* <FunctionImport /> */}
             </div>
           </div>
         </div>
