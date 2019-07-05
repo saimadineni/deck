@@ -4,7 +4,7 @@ import { Application } from 'core/application/application.model';
 // import { CloudProviderRegistry } from 'core/cloudProvider';
 // import { IFunctions, IServerGroup } from 'core/domain';
 import { CreateFunctionButton } from 'core/function/CreateFunctionButton';
-
+import { FunctionImport } from './functionImport';
 // import { HealthCounts } from 'core/healthCounts/HealthCounts';
 // import { EntityNotifications } from 'core/entityTag/notifications/EntityNotifications';
 
@@ -12,12 +12,22 @@ export interface IFunctionProps {
   app: Application;
 }
 
-export class Function extends React.Component<IFunctionProps> {
+interface IFunctionState {
+  isFunctionShowing: boolean;
+}
+
+export class Function extends React.Component<IFunctionProps, IFunctionState> {
   // public static defaultProps: Partial<IFunctionProps> = {
   //   showServerGroups: true,
   //   showInstances: false,
   // };
+  constructor(props: IFunctionProps) {
+    super(props);
 
+    this.state = {
+      isFunctionShowing: false,
+    };
+  }
   public render(): React.ReactElement<Function> {
     // const { application, functions } = this.props;
     // const config = CloudProviderRegistry.getValue(functions.provider || functions.cloudProvider, 'functions');
@@ -41,6 +51,17 @@ export class Function extends React.Component<IFunctionProps> {
             <div className="form-inline clearfix filters" />
             <div className="application-actions">
               <CreateFunctionButton app={this.props.app} />
+              <button
+                onClick={() => {
+                  this.setState(state => {
+                    return { isFunctionShowing: !state.isFunctionShowing };
+                  });
+                }}
+              >
+                list functions
+              </button>
+              {this.state.isFunctionShowing && <FunctionImport />}
+              {/* <FunctionImport /> */}
             </div>
           </div>
         </div>
