@@ -141,6 +141,9 @@ const helpContents: { [key: string]: string } = {
       </p>
   `,
   'aws.cloudformation.expectedArtifact': `The artifact that is to be applied to this stage. The artifact should represent a valid cloudformation template.`,
+  'aws.function.name': `Enter a name that describes the purpose of your function`,
+  'aws.function.runtime': `Choose the language to use to write your function`,
+  'aws.function.execution.role': `Lambda will create an execution role with permission to upload logs to Amazon CloudWatch Logs. You can also choose an existing role that defines the permissions of your function.`,
 };
 
 Object.keys(helpContents).forEach(key => HelpContentsRegistry.register(key, helpContents[key]));

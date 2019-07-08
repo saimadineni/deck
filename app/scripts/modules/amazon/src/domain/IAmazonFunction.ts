@@ -2,6 +2,7 @@ import { IFunction, IFunctionDeleteCommand, IFunctionUpsertCommand } from '@spin
 
 export interface IAmazonFunction extends IFunction {
   credentials?: string;
+  executionRole?: string;
 }
 
 export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {

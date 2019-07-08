@@ -12,9 +12,11 @@ import {
 } from '@spinnaker/core';
 
 import { IAmazonFunction, IAmazonFunctionUpsertCommand } from 'amazon/domain';
+import { FunctionBasicInformation } from './configure/FunctionBasicInformation';
+import { ExecutionRole } from './configure/ExecutionRole';
 
 export interface IAmazonCreateFunctionProps extends IFunctionModalProps {
-  func: IAmazonFunction;
+  functionDef: IAmazonFunction;
 }
 export interface IAmazonCreateFunctionState {
   isNew: boolean;
@@ -39,7 +41,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
     const funcCommand = props.command;
 
     this.state = {
-      isNew: !props.func,
+      isNew: !props.functionDef,
       functionCommand: funcCommand,
       taskMonitor: null,
     };
@@ -50,7 +52,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
   };
 
   public render() {
-    const { app, dismissModal, forPipelineConfig, func } = this.props;
+    const { app, dismissModal, forPipelineConfig, functionDef } = this.props;
     const { isNew, functionCommand, taskMonitor } = this.state;
 
     let heading = forPipelineConfig ? 'Configure Existing Function' : 'Create New Function';
@@ -70,20 +72,27 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
           return (
             <>
               <WizardPage
-                label="Basic Settings"
+                label="Basic information"
                 wizard={wizard}
                 order={nextIdx()}
-                render={() => (
-                  //<TargetGroups ref={innerRef} app={app} formik={formik} isNew={isNew} loadBalancer={loadBalancer} />
-                  <div> This is a basic setting</div>
+                render={innerRef => (
+                  <FunctionBasicInformation
+                    ref={innerRef}
+                    app={app}
+                    formik={formik}
+                    isNew={isNew}
+                    functionDef={functionDef}
+                  />
                 )}
               />
               <WizardPage
-                label="Advanced Settings"
+                label="Permissions"
                 wizard={wizard}
                 order={nextIdx()}
-                render={() => {
-                  return <div> This is an advanced setting</div>;
+                render={innerRef => {
+                  return (
+                    <ExecutionRole ref={innerRef} app={app} formik={formik} isNew={isNew} functionDef={functionDef} />
+                  );
                 }}
               />
             </>

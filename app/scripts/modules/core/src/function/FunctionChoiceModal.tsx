@@ -4,14 +4,14 @@ import { Button, Modal } from 'react-bootstrap';
 import { IFunctionModalProps, ModalClose, ReactModal, noop } from '@spinnaker/core';
 import { IAmazonFunctionConfig, FunctionTypes } from './FunctionTypes';
 
-export class FunctionsChoiceModal extends React.Component<IFunctionModalProps> {
+export class FunctionChoiceModal extends React.Component<IFunctionModalProps> {
   public static defaultProps: Partial<IFunctionModalProps> = {
     closeModal: noop,
     dismissModal: noop,
   };
 
   public static show(props: IFunctionModalProps): Promise<void> {
-    return ReactModal.show(FunctionsChoiceModal, {
+    return ReactModal.show(FunctionChoiceModal, {
       ...props,
       className: 'create-pipeline-modal-overflow-visible',
     });

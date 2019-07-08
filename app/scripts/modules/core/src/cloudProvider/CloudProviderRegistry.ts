@@ -101,7 +101,6 @@ export class CloudProviderRegistry {
 
   public static getValue(cloudProvider: string, key: string, skin?: string): any {
     if (!key || !this.providers.has(cloudProvider, skin)) {
-      console.log('RETURNING NULL');
       return null;
     }
     const config = this.getProvider(cloudProvider, skin),
