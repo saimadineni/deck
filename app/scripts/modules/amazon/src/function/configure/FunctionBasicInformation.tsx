@@ -5,6 +5,25 @@ import { FormikProps, Field } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
 
+const availableRuntimes = [
+  'nodejs',
+  'nodejs4.3',
+  'nodejs6.10',
+  'nodejs8.10',
+  'nodejs10.x',
+  'java8',
+  'python2.7',
+  'python3.6',
+  'python3.7',
+  'dotnetcore1.0',
+  'dotnetcore2.0',
+  'dotnetcore2.1',
+  'nodejs4.3-edge',
+  'go1.x',
+  'ruby2.5',
+  'provided',
+];
+
 export interface IFunctionProps {
   formik: FormikProps<IAmazonFunctionUpsertCommand>;
   isNew?: boolean;
@@ -19,7 +38,6 @@ export interface IFunctionState {
 export class FunctionBasicInformation extends React.Component<IFunctionProps, IFunctionState>
   implements IWizardPageComponent<IAmazonFunctionUpsertCommand> {
   public render() {
-    const availableRuntimes = ['AAA', 'BBB'];
     return (
       <div className="form-group">
         <div className="col-md-11">
