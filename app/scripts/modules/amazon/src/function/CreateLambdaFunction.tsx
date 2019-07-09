@@ -39,11 +39,9 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
   constructor(props: IAmazonCreateFunctionProps) {
     super(props);
 
-    const funcCommand = props.command;
-
     this.state = {
       isNew: !props.functionDef,
-      functionCommand: funcCommand,
+      functionCommand: props.command,
       taskMonitor: null,
     };
   }
@@ -53,7 +51,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
   };
 
   public render() {
-    const { app, dismissModal, forPipelineConfig, functionDef } = this.props;
+    const {  app, dismissModal, forPipelineConfig, functionDef } = this.props;
     const { isNew, functionCommand, taskMonitor } = this.state;
 
     let heading = forPipelineConfig ? 'Configure Existing Function' : 'Create New Function';

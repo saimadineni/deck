@@ -24,7 +24,7 @@ export class ExecutionRole extends React.Component<IExecutionRoleProps, IExecuti
         <div className="col-md-11">
           <div className="sp-margin-m-bottom">
             <FormikFormField
-              name="Execution role"
+              name="excutionRole"
               label="Execution role"
               help={<HelpField id="aws.function.execution.role" />}
               fastField={false}
@@ -32,7 +32,7 @@ export class ExecutionRole extends React.Component<IExecutionRoleProps, IExecuti
                 <ReactSelectInput
                   inputClassName="cloudfoundry-react-select"
                   {...props}
-                  value={availableRoles[0]}
+                  //   value={availableRoles[0]}
                   stringOptions={availableRoles}
                   clearable={false}
                 />
