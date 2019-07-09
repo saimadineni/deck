@@ -1,10 +1,17 @@
 import * as React from 'react';
-import { Observable, Subject } from 'rxjs';
-import { FormikFormField, AccountService, IAccount, IWizardPageComponent, HelpField, TextInput, ReactSelectInput } from '@spinnaker/core';
+
+import {
+  FormikFormField,
+  AccountService,
+  IAccount,
+  IWizardPageComponent,
+  HelpField,
+  TextInput,
+  ReactSelectInput,
+} from '@spinnaker/core';
 import { FormikProps, Field } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
-import { IAmazonCreateFunctionProps } from '../CreateLambdaFunction';
 
 const availableRuntimes = [
   'nodejs',
@@ -33,26 +40,26 @@ export interface IFunctionProps {
 
 export interface IFunctionState {
   availableRuntimes: Array<{ label: string; value: string }>;
-  accounts: IAccount[]
+  accounts: IAccount[];
   defaultRuntime: string[];
 }
 
 export class FunctionBasicInformation extends React.Component<IFunctionProps, IFunctionState>
   implements IWizardPageComponent<IAmazonFunctionUpsertCommand> {
-    constructor(props: IFunctionProps) {
-      super(props);
-      AccountService.listAccounts('aws').then((acc: IAccount) => {
-        this.state.accounts = acc
-      })
-    }
-    public state: IFunctionState = {
-      accounts: [],
-      availableRuntimes: null,
-      defaultRuntime: []
-    };
+  constructor(props: IFunctionProps) {
+    super(props);
+    AccountService.listAccounts('aws').then((acc: IAccount) => {
+      this.state.accounts = acc;
+    });
+  }
+  public state: IFunctionState = {
+    accounts: [],
+    availableRuntimes: null,
+    defaultRuntime: [],
+  };
 
-    public render() {
-      const { accounts } = this.state
+  public render() {
+    const { accounts } = this.state;
     return (
       <div className="form-group">
         <div className="col-md-11">
@@ -73,26 +80,28 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
               help={<HelpField id="aws.function.name" />}
               input={props => (
                 <ReactSelectInput
-                inputClassName="cloudfoundry-react-select"
-                {...props}
-                stringOptions={accounts.map((acc: IAccount) => acc.name)}
-                clearable={true}
-              />
-            )}
-            // onChange={this.accountChanged}
-            required={true}
-          />
-          </div>
-          {accounts && <div className="sp-margin-m-bottom">
-            <FormikFormField
-              name="Region"
-              label="Region"
-              help={<HelpField id="aws.function.region" />}
-              input={props => (
-                <TextInput {...props} type="text" className="form-control input-sm no-spel" name="name" />
+                  inputClassName="cloudfoundry-react-select"
+                  {...props}
+                  stringOptions={accounts.map((acc: IAccount) => acc.name)}
+                  clearable={true}
+                />
               )}
+              // onChange={this.accountChanged}
+              required={true}
             />
-          </div>}
+          </div>
+          {accounts && (
+            <div className="sp-margin-m-bottom">
+              <FormikFormField
+                name="Region"
+                label="Region"
+                help={<HelpField id="aws.function.region" />}
+                input={props => (
+                  <TextInput {...props} type="text" className="form-control input-sm no-spel" name="name" />
+                )}
+              />
+            </div>
+          )}
           <div className="sp-margin-m-bottom">
             <FormikFormField
               name="Runtime"
