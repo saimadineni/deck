@@ -14,6 +14,7 @@ import {
 import { IAmazonFunction, IAmazonFunctionUpsertCommand } from 'amazon/domain';
 import { FunctionBasicInformation } from './configure/FunctionBasicInformation';
 import { ExecutionRole } from './configure/ExecutionRole';
+import { Network } from './configure/Network';
 
 export interface IAmazonCreateFunctionProps extends IFunctionModalProps {
   functionDef: IAmazonFunction;
@@ -93,6 +94,14 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
                   return (
                     <ExecutionRole ref={innerRef} app={app} formik={formik} isNew={isNew} functionDef={functionDef} />
                   );
+                }}
+              />
+              <WizardPage
+                label="Network"
+                wizard={wizard}
+                order={nextIdx()}
+                render={innerRef => {
+                  return <Network ref={innerRef} app={app} formik={formik} isNew={isNew} functionDef={functionDef} />;
                 }}
               />
             </>
