@@ -175,7 +175,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
                 label="Network"
                 wizard={wizard}
                 order={nextIdx()}
-                render={innerRef => {
+                render={({ innerRef }) => {
                   return <Network ref={innerRef} app={app} formik={formik} isNew={isNew} functionDef={functionDef} />;
                 }}
               />
