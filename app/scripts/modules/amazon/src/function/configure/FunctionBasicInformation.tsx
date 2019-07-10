@@ -1,13 +1,15 @@
 import * as React from 'react';
 
 import {
-  Application,
   FormikFormField,
+  AccountService,
+  IAccount,
   IWizardPageComponent,
   HelpField,
   TextInput,
   ReactSelectInput,
 } from '@spinnaker/core';
+
 import { FormikProps, Field, FormikErrors } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
@@ -42,16 +44,23 @@ export interface IFunctionProps {
 
 export interface IFunctionState {
   existingFunctionNames: IFunctionByAccount[];
+  accounts: IAccount[];
 }
 
 export class FunctionBasicInformation extends React.Component<IFunctionProps, IFunctionState>
   implements IWizardPageComponent<IAmazonFunctionUpsertCommand> {
+  public state: IFunctionState = {
+    accounts: [],
+    existingFunctionNames: [],
+  };
+
   constructor(props: IFunctionProps) {
     super(props);
-    //const fnNames = FunctionReader.listFunctions('aws');
-    this.state = {
-      existingFunctionNames: [],
-    };
+
+    AccountService.listAccounts('aws').then((acc: IAccount) => {
+      this.state.accounts = acc;
+      this.state.existingFunctionNames = [];
+    });
   }
 
   private props$ = new Subject<IFunctionProps>();
@@ -96,6 +105,10 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
     this.props.formik.setFieldValue('handler', value);
   };
 
+  private handleAccountChange = (value: string): void => {
+    this.props.formik.setFieldValue('account', value);
+  };
+
   public render() {
     const { app } = this.props;
     const { errors, values } = this.props.formik;
@@ -107,88 +120,133 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
       'alert-info': !errors.name,
     });
 
+    const { accounts } = this.state;
+
     return (
       <div className="container-fluid form-horizontal">
         <div className="modal-body">
           <div className="form-group">
-            <div className="scol-md-3 sm-label-left">
-              Function Name
-              <HelpField id="aws.function.name" />
-              <TextInput
-                type="text"
-                className={`form-control input-sm no-spel ${errors.functionName ? 'invalid' : ''}`}
-                name="name"
-                value={values.functionName}
+            <div className="sp-margin-m-bottom">
+              <FormikFormField
+                name="account"
+                label="Account"
+                help={<HelpField id="aws.account.name" />}
+                input={props => (
+                  <ReactSelectInput
+                    inputClassName="cloudfoundry-react-select"
+                    {...props}
+                    stringOptions={accounts.map((acc: IAccount) => acc.name)}
+                    clearable={true}
+                  />
+                )}
+                onChange={(evt: any) => this.handleAccountChange(evt.target.value)}
+                required={true}
+              />
+            </div>
+            <div className="sp-margin-m-bottom">
+              <FormikFormField
+                name="functionName"
+                label="Function Name"
+                help={<HelpField id="aws.function.name" />}
+                input={() => (
+                  <TextInput type="text" className="form-control" name="functionName" value={values.functionName} />
+                )}
                 onChange={(evt: any) => this.handleFunctionNameChange(evt.target.value)}
+                required={true}
               />
             </div>
-          </div>
 
-          <div className="form-group">
-            <div className="scol-md-3 sm-label-left">
-              Region
-              <HelpField id="aws.function.region" />
-              <TextInput
-                type="text"
-                className="form-control"
-                name="region"
-                value={values.region}
-                onChange={(evt: any) => this.handleRegionChange(evt.target.value)}
-              />
-            </div>
-          </div>
+            {accounts && (
+              <div className="sp-margin-m-bottom">
+                <FormikFormField
+                  name="Region"
+                  label="Region"
+                  help={<HelpField id="aws.function.region" />}
+                  input={props => (
+                    <TextInput
+                      {...props}
+                      type="text"
+                      className="form-control input-sm no-spel"
+                      name="name"
+                      value={values.region}
+                    />
+                  )}
+                  onChange={(evt: any) => this.handleRegionChange(evt.target.value)}
+                />
+              </div>
+            )}
 
-          <div className="form-group">
-            <div className="scol-md-3 sm-label-left">
-              Runtime
-              <HelpField id="aws.function.runtime" />
-              <ReactSelectInput
-                inputClassName="aws-react-select"
-                stringOptions={availableRuntimes}
-                clearable={false}
-                value={values.runtime}
+            <div className="sp-margin-m-bottom">
+              <FormikFormField
+                name="Runtime"
+                label="Runtime"
+                help={<HelpField id="aws.function.runtime" />}
+                fastField={false}
+                input={props => (
+                  <ReactSelectInput
+                    inputClassName="cloudfoundry-react-select"
+                    {...props}
+                    stringOptions={availableRuntimes}
+                    clearable={false}
+                  />
+                )}
                 onChange={(evt: any) => this.handleRuntimeChange(evt.target.value)}
+                required={true}
               />
             </div>
-          </div>
 
-          <div className="form-group">
-            <div className="scol-md-3 sm-label-left">
-              S3 Bucket
-              <HelpField id="aws.function.region" />
-              <TextInput
-                type="text"
-                className="form-control"
-                name="s3Bucket"
-                value={values.s3bucket}
-                onChange={(evt: any) => this.handleS3BucketChange(evt.target.value)}
+            <div className="sp-margin-m-bottom">
+              <FormikFormField
+                name="s3bucket"
+                label="S3 Bucket"
+                help={<HelpField id="aws.function.name" />}
+                input={() => (
+                  <TextInput
+                    type="text"
+                    className="form-control"
+                    name="s3bucket"
+                    value={values.s3bucket}
+                    //onChange={(evt: any) => this.handleFunctionNameChange(evt.target.value)}
+                  />
+                )}
+                onChange={(evt: any) => this.handleFunctionNameChange(evt.target.value)}
+                required={true}
               />
             </div>
-          </div>
 
-          <div className="form-group">
-            <div className="scol-md-3 sm-label-left">
-              S3 Function File
-              <HelpField id="aws.function.region" />
-              <TextInput
-                type="text"
-                className="form-control"
+            <div className="sp-margin-m-bottom">
+              <FormikFormField
                 name="s3FunctionFile"
-                value={values.s3key}
+                label="S3 Function File"
+                help={<HelpField id="aws.function.name" />}
+                input={() => (
+                  <TextInput
+                    type="text"
+                    className="form-control"
+                    name="s3functionfile"
+                    value={values.s3key}
+                    //onChange={(evt: any) => this.handleFunctionNameChange(evt.target.value)}
+                  />
+                )}
                 onChange={(evt: any) => this.handleS3FunctionFileChange(evt.target.value)}
+                required={true}
               />
             </div>
-          </div>
 
-          <div className="form-group">
-            <div className="scol-md-3 sm-label-left">
-              Lambda Handler
-              <HelpField id="aws.function.region" />
-              <TextInput
-                type="text"
-                className="form-control"
-                name="handler"
-                value={values.handler}
+            <div className="sp-margin-m-bottom">
+              <FormikFormField
+                name="lambdaHandler"
+                label="Lambda Handler"
+                help={<HelpField id="aws.function.region" />}
+                input={props => (
+                  <TextInput
+                    {...props}
+                    type="text"
+                    className="form-control input-sm no-spel"
+                    name="handler"
+                    value={values.handler}
+                  />
+                )}
                 onChange={(evt: any) => this.handleHandlerChange(evt.target.value)}
               />
             </div>

@@ -1,4 +1,5 @@
 import { IFunction, IFunctionDeleteCommand, IFunctionUpsertCommand } from '@spinnaker/core';
+import { string } from 'prop-types';
 
 export interface IAmazonFunction extends IFunction {
   credentials?: string;
@@ -21,6 +22,8 @@ export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
   functionName: string;
   tags: [{ key: string; value: string }];
   description: string;
+  vpcId?: string;
+  account?: string;
 }
 
 export interface IAmazonFunctionDeleteCommand extends IFunctionDeleteCommand {
