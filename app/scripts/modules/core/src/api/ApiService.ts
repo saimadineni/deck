@@ -4,6 +4,7 @@ import { AuthenticationInitializer } from '../authentication/AuthenticationIniti
 import { SETTINGS } from 'core/config/settings';
 import { ICache } from 'core/cache';
 import { isNil } from 'lodash';
+import { ConsoleReporter } from 'jasmine';
 
 export interface IRequestBuilder {
   config?: IRequestConfig;
@@ -170,7 +171,6 @@ export class API {
     urls
       .filter(i => !isNil(i))
       .forEach((url: string) => (config.url = `${config.url}/${url.toString().replace(/^\/+/, '')}`));
-
     return this.baseReturn(config);
   }
 

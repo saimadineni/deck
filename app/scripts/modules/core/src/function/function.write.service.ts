@@ -12,7 +12,7 @@ export interface IFunctionUpsertCommand extends IJob {
   detail?: string;
   moniker?: IMoniker;
   region: string;
-  stack?: string;
+  operation: string;
 }
 
 export interface IFunctionDeleteCommand extends IJob {
@@ -21,16 +21,17 @@ export interface IFunctionDeleteCommand extends IJob {
   credentials: string;
   regions?: string[];
   vpcId?: string;
+  operation: string;
 }
 
 export class FunctionWriter {
   public static deleteFunction(command: IFunctionDeleteCommand, application: Application): ng.IPromise<ITask> {
-    command.type = 'deleteFunction';
-
+    command.type = 'lambdaFunction';
+    command.operation = 'deleteLambdaFunction';
     return TaskExecutor.executeTask({
       job: [command],
       application,
-      description: `Delete load balancer: ${command.functionName}`,
+      description: `Delete Function: ${command.functionName}`,
     });
   }
 
@@ -40,13 +41,16 @@ export class FunctionWriter {
     descriptor: string,
     params: any = {},
   ): IPromise<ITask> {
+    console.log('&&&&&&&&&&&&&&& *************** &&&&&&&&&&&&&&&& ');
+    console.log(command);
+    console.log('&&&&&&&&&&&&&&& %%%%%%%%%%%%%%%% &&&&&&&&&&&&&&&& ');
     Object.assign(command, params);
-    command.type = 'upsertFunction';
-
+    command.type = 'lambdaFunction';
+    command.operation = 'createLambdaFunction';
     return TaskExecutor.executeTask({
       job: [command],
       application,
-      description: `${descriptor} Load Balancer: ${command['name']}`,
+      description: `${descriptor} Function: ${command['functionName']}`,
     });
   }
 }

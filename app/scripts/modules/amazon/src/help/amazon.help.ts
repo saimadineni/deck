@@ -144,6 +144,7 @@ const helpContents: { [key: string]: string } = {
   'aws.function.name': `Enter a name that describes the purpose of your function`,
   'aws.function.runtime': `Choose the language to use to write your function`,
   'aws.function.execution.role': `Lambda will create an execution role with permission to upload logs to Amazon CloudWatch Logs. You can also choose an existing role that defines the permissions of your function.`,
+  'aws.function.env.vars': `You can define environment variables as key-value pairs that are accessible from your function code. These are useful to store configuration settings without the need to change function code`,
 };
 
 Object.keys(helpContents).forEach(key => HelpContentsRegistry.register(key, helpContents[key]));
