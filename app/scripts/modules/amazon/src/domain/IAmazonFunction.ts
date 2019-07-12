@@ -3,27 +3,27 @@ import { string } from 'prop-types';
 
 export interface IAmazonFunction extends IFunction {
   credentials?: string;
-  executionRole?: string;
+  role?: string;
   runtime: string;
   s3bucket: string;
   s3key: string;
   handler: string;
   functionName: string;
-  tags: [{ key: string; value: string }];
   description: string;
+  tags: [{}];
 }
 
 export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
-  executionRole?: string;
+  role?: string;
   runtime: string;
   s3bucket: string;
   s3key: string;
   handler: string;
-  functionName: string;
-  tags: [{ key: string; value: string }];
-  description: string;
+  tags: [{}];
   vpcId?: string;
-  account?: string;
+  environment: {
+    variables: {};
+  };
 }
 
 export interface IAmazonFunctionDeleteCommand extends IFunctionDeleteCommand {

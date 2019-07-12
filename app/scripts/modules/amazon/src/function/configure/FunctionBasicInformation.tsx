@@ -111,7 +111,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
   };
 
   private handleAccountChange = (value: string): void => {
-    this.props.formik.setFieldValue('account', value);
+    this.props.formik.setFieldValue('credentials', value);
     console.log('Account changed: ', value);
   };
 
@@ -141,7 +141,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
                     inputClassName="cloudfoundry-react-select"
                     stringOptions={accounts.map((acc: IAccount) => acc.name)}
                     clearable={true}
-                    value={values.account}
+                    value={values.credentials}
                     onChange={(evt: any) => this.handleAccountChange(evt.target.value)}
                   />
                 </div>

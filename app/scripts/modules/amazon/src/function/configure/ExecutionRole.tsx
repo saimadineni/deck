@@ -58,7 +58,7 @@ export class ExecutionRole extends React.Component<IExecutionRoleProps, IExecuti
 
   private roleSelect = (option: Option<string>) => {
     const role = option.target.value;
-    this.props.formik.setFieldValue('executionRole', role);
+    this.props.formik.setFieldValue('role', role);
     console.log(role);
   };
 
@@ -108,7 +108,7 @@ export class ExecutionRole extends React.Component<IExecutionRoleProps, IExecuti
                     className="form-control input-sm no-spel"
                     name="roleARN"
                     onChange={this.roleSelect}
-                    value={values.executionRole}
+                    value={values.role}
                   />
                 )}
                 //onChange={this.roleSelect}

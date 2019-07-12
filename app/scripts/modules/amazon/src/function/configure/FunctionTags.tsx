@@ -6,18 +6,17 @@ import { FormikProps, Field, FormikErrors } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
 
-export interface IFunctionEnvironmentVariablesProps {
+export interface IFunctionTagsProps {
   formik: FormikProps<IAmazonFunctionUpsertCommand>;
   isNew?: boolean;
   functionDef: IAmazonFunction;
 }
 
-export interface IFunctionEnvironmentVariablesState {
+export interface IFunctionTagsState {
   some: string;
 }
 
-export class FunctionEnvironmentVariables
-  extends React.Component<IFunctionEnvironmentVariablesProps, IFunctionEnvironmentVariablesState>
+export class FunctionTags extends React.Component<IFunctionTagsProps, IFunctionTagsState>
   implements IWizardPageComponent<IAmazonFunctionUpsertCommand> {
   private duplicateKeys = false;
 
@@ -25,7 +24,7 @@ export class FunctionEnvironmentVariables
     const errors = {} as any;
 
     if (this.duplicateKeys) {
-      errors.vars = 'Variables have duplicate keys.';
+      errors.vars = 'Tags have duplicate keys.';
     }
 
     return errors;
@@ -35,10 +34,10 @@ export class FunctionEnvironmentVariables
     this.setState({ some: '' });
   }
 
-  private varsChanged = (envVar: { [key: string]: string }, duplicateKeys: boolean) => {
+  private varsChanged = (tag: [{ [key: string]: string }], duplicateKeys: boolean) => {
     this.duplicateKeys = duplicateKeys;
-    this.props.formik.setFieldValue('environment.variables', envVar);
-    console.log(envVar);
+    this.props.formik.setFieldValue('tags', Array(tag));
+    console.log(tag);
   };
 
   public render() {
@@ -46,8 +45,8 @@ export class FunctionEnvironmentVariables
       <div className="form-group">
         <div className="col-md-11">
           <div className="sp-margin-m-bottom">
-            <b>Environment Variables (optional)</b>
-            <HelpField id="aws.function.env.vars" />
+            <b>Tags (optional)</b>
+            <HelpField id="aws.function.tags" />
           </div>
           <MapEditor model={{} as any} allowEmpty={true} onChange={this.varsChanged} />
         </div>

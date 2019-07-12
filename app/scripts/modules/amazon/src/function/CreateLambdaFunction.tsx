@@ -19,6 +19,8 @@ import { ExecutionRole } from './configure/ExecutionRole';
 
 import { FunctionEnvironmentVariables } from './configure/FunctionEnvironmentVariables';
 import { Network } from './configure/Network';
+import { AwsFunctionTransformer } from './function.transformer';
+import { FunctionTags } from './configure/FunctionTags';
 
 export interface IAmazonCreateFunctionProps extends IFunctionModalProps {
   functionDef: IAmazonFunction;
@@ -37,8 +39,11 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
 
   constructor(props: IAmazonCreateFunctionProps) {
     super(props);
-
-    const funcCommand = props.command as IAmazonFunctionUpsertCommand;
+    const funcCommand = props.command
+      ? (props.command as IAmazonFunctionUpsertCommand) // ejecting from a wizard
+      : props.functionDef
+      ? AwsFunctionTransformer.convertFunctionForEditing(props.functionDef)
+      : AwsFunctionTransformer.constructNewAwsFunctionTemplate(props.app);
 
     this.state = {
       isNew: !props.functionDef,
@@ -99,7 +104,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
 
     const taskMonitor = new TaskMonitor({
       application: app,
-      title: `${isNew ? 'Creating' : 'Updating'} your load balancer`,
+      title: `${isNew ? 'Creating' : 'Updating'} your function`,
       modalInstance: TaskMonitor.modalInstanceEmulation(() => this.props.dismissModal()),
       onTaskComplete: () => this.onTaskComplete(functionCommandFormatted),
     });
@@ -156,7 +161,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
                 }}
               />
               <WizardPage
-                label="Environment variables"
+                label="Environment Variables"
                 wizard={wizard}
                 order={nextIdx()}
                 render={({ innerRef }) => {
@@ -168,6 +173,16 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
                       isNew={isNew}
                       functionDef={functionDef}
                     />
+                  );
+                }}
+              />
+              <WizardPage
+                label="Tags"
+                wizard={wizard}
+                order={nextIdx()}
+                render={({ innerRef }) => {
+                  return (
+                    <FunctionTags ref={innerRef} app={app} formik={formik} isNew={isNew} functionDef={functionDef} />
                   );
                 }}
               />

@@ -6,11 +6,10 @@ import { IJob, TaskExecutor } from 'core/task/taskExecutor';
 import { IMoniker } from 'core/naming/IMoniker';
 
 export interface IFunctionUpsertCommand extends IJob {
-  name: string;
+  functionName: string;
   cloudProvider: string;
   credentials: string;
-  detail?: string;
-  moniker?: IMoniker;
+  description?: string;
   region: string;
   operation: string;
 }
