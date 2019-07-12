@@ -55,7 +55,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
       <div className="form-group">
         <div className="col-md-11">
           <div className="sp-margin-m-bottom">
-            {values.account && (
+            {values.credentials && (
               <FormikFormField
                 name="vpcId"
                 label="VPC Id"
@@ -66,7 +66,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
                     inputClassName="cloudfoundry-react-select"
                     {...props}
                     stringOptions={vpcOptions
-                      .filter((v: IVpc) => v.account === values.account)
+                      .filter((v: IVpc) => v.account === values.credentials)
                       .map((v: IVpc) => v.name + ' (' + v.id + ')')}
                     clearable={false}
                   />
