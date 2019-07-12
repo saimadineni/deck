@@ -4,17 +4,19 @@ import {
   FormikFormField,
   AccountService,
   IAccount,
+  IRegion,
   IWizardPageComponent,
   HelpField,
   TextInput,
   ReactSelectInput,
+  RegionSelectField,
 } from '@spinnaker/core';
 
 import { FormikProps, Field, FormikErrors } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
 import { FunctionReader, IFunctionByAccount } from 'core/function/function.read.service';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import * as classNames from 'classnames';
 const availableRuntimes = [
   'nodejs',
@@ -43,15 +45,17 @@ export interface IFunctionProps {
 }
 
 export interface IFunctionState {
-  existingFunctionNames: IFunctionByAccount[];
+  //existingFunctionNames: IFunctionByAccount[];
   accounts: IAccount[];
+  regions: IRegion[];
 }
 
 export class FunctionBasicInformation extends React.Component<IFunctionProps, IFunctionState>
   implements IWizardPageComponent<IAmazonFunctionUpsertCommand> {
   public state: IFunctionState = {
     accounts: [],
-    existingFunctionNames: [],
+    //existingFunctionNames: [],
+    regions: [],
   };
 
   constructor(props: IFunctionProps) {
@@ -59,7 +63,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
 
     AccountService.listAccounts('aws').then((acc: IAccount) => {
       this.state.accounts = acc;
-      this.state.existingFunctionNames = [];
+      //this.state.existingFunctionNames = [];
     });
   }
 
@@ -78,6 +82,55 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
   public componentWillUnmount(): void {
     this.destroy$.next();
   }
+
+  /* ******** */
+  public componentDidMount(): void {
+    const formValues$ = this.props$.map(props => props.formik.values);
+    const appName$ = this.props$.map(props => props.app.name).distinctUntilChanged();
+
+    const form = {
+      account$: formValues$.map(x => x.credentials).distinctUntilChanged(),
+      region$: formValues$.map(x => x.region).distinctUntilChanged(),
+      functionName$: formValues$.map(x => x.functionName).distinctUntilChanged(),
+      runtime$: formValues$.map(x => x.runtime).distinctUntilChanged(),
+      s3bucket$: formValues$.map(x => x.s3bucket).distinctUntilChanged(),
+      s3key$: formValues$.map(x => x.s3key).distinctUntilChanged(),
+      handler$: formValues$.map(x => x.handler).distinctUntilChanged(),
+    };
+
+    const allAccounts$ = Observable.fromPromise(AccountService.listAccounts('aws')).shareReplay(1);
+
+    // combineLatest with allAccounts to wait for accounts to load and be cached
+    const accountRegions$ = Observable.combineLatest(form.account$, allAccounts$)
+      .switchMap(([currentAccount, _allAccounts]) => AccountService.getRegionsForAccount(currentAccount))
+      .shareReplay(1);
+
+    // const allFunctions$ = this.props.app.getDataSource('functions').data$ as Observable<IAmazonFunction[]>;
+    // const regionfunctions$ = Observable.combineLatest(allFunctions$, form.account$, form.region$)
+    // .map(([allFunctions, currentAccount, currentRegion]) => {
+    //   return allFunctions
+    //     .filter(fn => fn.account === currentAccount && fn.region === currentRegion)
+    //     .map(fn => fn.functionName);
+    // })
+    // .shareReplay(1);
+
+    accountRegions$
+      .withLatestFrom(form.region$)
+      .takeUntil(this.destroy$)
+      .subscribe(([accountRegions, selectedRegion]) => {
+        // If the selected region doesn't exist in the new list of regions (for a new acct), select the first region.
+        if (!accountRegions.some(x => x.name === selectedRegion)) {
+          this.props.formik.setFieldValue('region', accountRegions[0] && accountRegions[0].name);
+        }
+      });
+
+    Observable.combineLatest(allAccounts$, accountRegions$)
+      .takeUntil(this.destroy$)
+      .subscribe(([accounts, regions]) => {
+        return this.setState({ accounts, regions });
+      });
+  }
+  /* ******** */
 
   private handleFunctionNameChange = (value: string): void => {
     this.props.formik.setFieldValue('functionName', value);
@@ -118,15 +171,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
   public render() {
     const { app } = this.props;
     const { errors, values } = this.props.formik;
-
-    const className = classNames({
-      'col-md-12': true,
-      well: true,
-      'alert-danger': errors.name,
-      'alert-info': !errors.name,
-    });
-
-    const { accounts } = this.state;
+    const { accounts, regions } = this.state;
 
     return (
       <div className="container-fluid form-horizontal">
@@ -163,7 +208,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
 
               <div className="form-group">
                 <div className="scol-md-3 sm-label-left">
-                  Region
+                  {/* Region
                   <HelpField id="aws.function.region" />
                   <TextInput
                     type="text"
@@ -171,6 +216,14 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
                     name="region"
                     value={values.region}
                     onChange={(evt: any) => this.handleRegionChange(evt.target.value)}
+                  /> */}
+                  <RegionSelectField
+                    labelColumns={3}
+                    component={values}
+                    field="region"
+                    account={values.credentials}
+                    onChange={this.handleRegionChange}
+                    regions={regions}
                   />
                 </div>
               </div>
