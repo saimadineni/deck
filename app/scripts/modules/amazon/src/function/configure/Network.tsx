@@ -39,14 +39,9 @@ export class Network extends React.Component<INetworkProps, INetworkState>
   };
   private getAllVpcs(): void {
     VpcReader.listVpcs().then(Vpcs => {
-      Vpcs.forEach(v => {
-        // TODO: Need to replace with the account the user selects
-        if (v.account === this.props.formik.values.account) {
-          this.state.vpcOptions.push(v);
-        }
-      });
+      this.state.vpcOptions = Vpcs;
     });
-    console.log(this.state.vpcOptions);
+    // console.log(this.state.vpcOptions);
   }
   public validate(): FormikErrors<IAmazonFunctionUpsertCommand> {
     return {};
@@ -70,8 +65,9 @@ export class Network extends React.Component<INetworkProps, INetworkState>
                   <ReactSelectInput
                     inputClassName="cloudfoundry-react-select"
                     {...props}
-                    // value={vpcId}
-                    stringOptions={vpcOptions.map((v: IVpc) => v.name + ' | ' + v.id)}
+                    stringOptions={vpcOptions
+                      .filter((v: IVpc) => v.account === values.account)
+                      .map((v: IVpc) => v.name + ' (' + v.id + ')')}
                     clearable={false}
                   />
                 )}
