@@ -6,14 +6,14 @@ import { IFunction } from 'core/domain';
 import { IFunctionUpsertCommand } from 'core/function';
 import { ModalInjector, ReactInjector } from 'core/reactShims';
 import { IModalComponentProps, Tooltip } from 'core/presentation';
-import { FunctionsChoiceModal } from './FunctionsChoiceModal';
+import { FunctionChoiceModal } from './FunctionChoiceModal';
 
 export interface IFunctionModalProps extends IModalComponentProps {
   className?: string;
   dialogClassName?: string;
   app: Application;
   forPipelineConfig?: boolean;
-  function: IFunction;
+  functionDef: IFunction;
   command?: IFunctionUpsertCommand; // optional, when ejecting from a wizard
   closeModal?(functionCommand: IFunctionUpsertCommand): void; // provided by ReactModal
   dismissModal?(rejectReason?: any): void; // provided by ReactModal
@@ -31,42 +31,37 @@ export class CreateFunctionButton extends React.Component<ICreateFunctionButtonP
   private createFunction = (): void => {
     const { skinSelectionService } = ReactInjector;
     const { app } = this.props;
-    FunctionsChoiceModal.show({
-      app: app,
-      forPipelineConfig: false,
-      function: null,
-      isNew: true,
-    });
-    // ProviderSelectionService.selectProvider(app, 'function').then(selectedProvider => {
-    //   skinSelectionService.selectSkin(selectedProvider).then(selectedSkin => {
-    //     const provider = CloudProviderRegistry.getValue(selectedProvider, 'function', selectedSkin);
 
-    //     if (provider.CreateFunctionModal) {
-    //       provider.CreateFunctionModal.show({
-    //         app: app,
-    //         application: app,
-    //         forPipelineConfig: false,
-    //         function: null,
-    //         isNew: true,
-    //       });
-    //     } else {
-    //       // angular
-    //       ModalInjector.modalService
-    //         .open({
-    //           templateUrl: provider.createFunctionTemplateUrl,
-    //           controller: `${provider.createFunctionController} as ctrl`,
-    //           size: 'lg',
-    //           resolve: {
-    //             application: () => this.props.app,
-    //             function: (): IFunction => null,
-    //             isNew: () => true,
-    //             forPipelineConfig: () => false,
-    //           },
-    //         })
-    //         .result.catch(() => {});
-    //     }
-    //   });
-    // });
+    ProviderSelectionService.selectProvider(app, 'function').then(selectedProvider => {
+      skinSelectionService.selectSkin(selectedProvider).then(selectedSkin => {
+        const provider = CloudProviderRegistry.getValue(selectedProvider, 'function', selectedSkin);
+        if (provider.CreateFunctionModal) {
+          provider.CreateFunctionModal.show({
+            app: app,
+            application: app,
+            forPipelineConfig: false,
+            function: null,
+            isNew: true,
+          });
+        } else {
+          // TODO
+          // angular
+          ModalInjector.modalService
+            .open({
+              templateUrl: provider.createFunctionTemplateUrl,
+              controller: `${provider.createFunctionController} as ctrl`,
+              size: 'lg',
+              resolve: {
+                application: () => this.props.app,
+                function: (): IFunction => null,
+                isNew: () => true,
+                forPipelineConfig: () => false,
+              },
+            })
+            .result.catch(() => {});
+        }
+      });
+    });
   };
 
   public render() {
