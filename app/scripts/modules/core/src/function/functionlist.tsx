@@ -1,7 +1,15 @@
 import * as React from 'react';
 
 interface IFunctionListProps {
-  functions: Array<Function>;
+  result: {
+    name: String;
+    region: [
+      {
+        name: String;
+        functions: [Function];
+      },
+    ];
+  }[];
 }
 
 interface Function {
@@ -29,17 +37,23 @@ interface Function {
   version: String;
 }
 
-export const FunctionLists: React.FC<IFunctionListProps> = ({ functions }) => {
+export const FunctionLists: React.FC<IFunctionListProps> = ({ result }) => {
   return (
     <div>
       <h1>Function List by</h1>
-      {functions.map(f => (
+      {result.map(f => (
         <div>
-          <div>
-            <h5>{f.account}</h5>
-            <h6>{f.functionName}</h6>
-            <p>{f.region}</p>
-          </div>
+          <h1>{f.name}</h1>
+          {f.region.map(region => (
+            <div>
+              <h2>{region.name}</h2>
+              {region.functions.map(func => (
+                <div>
+                  <p>{func.functionName}</p>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       ))}
     </div>

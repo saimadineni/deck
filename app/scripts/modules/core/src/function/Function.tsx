@@ -57,7 +57,7 @@ export class Function extends React.Component<IFunctionProps, IFunctionState> {
               list functions
             </button>
             {this.state.isFunctionShowing && <FunctionImport />}
-            {/* <FunctionImport /> */}
+            <FunctionImport />
           </div>
           <div className="col-lg-4 col-md-2">
             <div className="form-inline clearfix filters" />
