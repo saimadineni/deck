@@ -3,11 +3,11 @@ import { StateParams } from '@uirouter/angularjs';
 
 import { INestedState, StateConfigProvider } from 'core/navigation';
 import { APPLICATION_STATE_PROVIDER, ApplicationStateProvider } from 'core/application';
-import { filterModelConfig } from 'core/function/filter/FunctionsFilterModel';
-import { Function } from 'core/function/Function';
+import { filterModelConfig } from 'core/function/filter/FunctionFilterModel';
+import { Functions } from 'core/function/Functions';
 
 import { FunctionDetails } from './FunctionDetails';
-// import { FunctionsFilters } from '../functions/filter/FunctionsFilters';
+import { FunctionFilters } from './filter/FunctionFilters';
 
 export const FUNCTION_STATES = 'spinnaker.core.functions.states';
 module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
@@ -16,7 +16,7 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
   (applicationStateProvider: ApplicationStateProvider, stateConfigProvider: StateConfigProvider) => {
     const functionDetails: INestedState = {
       name: 'functionDetails',
-      url: '/functionDetails/:provider/:accountId/:region/:vpcId/:name',
+      url: '/functionDetails/:provider/:account/:region/:vpcId/:name',
       params: {
         vpcId: {
           value: null,
@@ -45,9 +45,9 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
       },
       data: {
         pageTitleDetails: {
-          title: 'Load Balancer Details',
+          title: 'Function Details',
           nameParam: 'name',
-          accountParam: 'accountId',
+          accountParam: 'account',
           regionParam: 'region',
         },
         history: {
@@ -60,13 +60,13 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
       url: `/functions?${stateConfigProvider.paramsToQuery(filterModelConfig)}`,
       name: 'functions',
       views: {
-        nav: { component: FunctionDetails, $type: 'react' },
-        master: { component: Function, $type: 'react' },
+        nav: { component: FunctionFilters, $type: 'react' },
+        master: { component: Functions, $type: 'react' },
       },
       params: stateConfigProvider.buildDynamicParams(filterModelConfig),
       data: {
         pageTitleSection: {
-          title: 'Functions Page',
+          title: 'Functions',
         },
       },
       children: [],

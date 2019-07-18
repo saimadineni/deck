@@ -12,7 +12,6 @@ export interface IFunction extends ITaggedEntity {
   account?: string;
   cloudProvider?: string;
   detail?: string;
-  functionType?: string;
   name?: string;
   moniker?: IMoniker;
   provider?: string;
@@ -21,4 +20,11 @@ export interface IFunction extends ITaggedEntity {
   type?: string;
   vpcId?: string;
   vpcName?: string;
+}
+
+export interface IFunctionGroup {
+  heading: string;
+  functionDef?: IFunction;
+  subgroups?: IFunctionGroup[];
+  searchField?: string;
 }

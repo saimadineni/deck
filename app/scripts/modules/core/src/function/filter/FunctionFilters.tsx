@@ -7,23 +7,22 @@ import { Application } from 'core/application';
 import { CloudProviderLabel, CloudProviderLogo } from 'core/cloudProvider';
 import { FilterCollapse, ISortFilter, digestDependentFilters } from 'core/filterModel';
 import { FilterSection } from 'core/cluster/filter/FilterSection';
-import { LoadBalancerState } from 'core/state';
+import { FunctionState } from 'core/state';
 
 const poolValueCoordinates = [
-  { filterField: 'providerType', on: 'functions', localField: 'type' },
-  { filterField: 'account', on: 'functions', localField: 'account' },
-  { filterField: 'region', on: 'functions', localField: 'region' },
-  { filterField: 'availabilityZone', on: 'instance', localField: 'zone' },
+  { filterField: 'providerType', on: 'function', localField: 'type' },
+  { filterField: 'account', on: 'function', localField: 'account' },
+  { filterField: 'region', on: 'function', localField: 'region' },
 ];
 
 function poolBuilder(functions: any[]) {
   const pool = chain(functions)
-    .map(lb => {
+    .map(fn => {
       const poolUnitTemplate = chain(poolValueCoordinates)
-        .filter({ on: 'functions' })
+        .filter({ on: 'function' })
         .reduce(
           (acc, coordinate) => {
-            acc[coordinate.filterField] = lb[coordinate.localField];
+            acc[coordinate.filterField] = fn[coordinate.localField];
             return acc;
           },
           {} as any,
@@ -31,29 +30,21 @@ function poolBuilder(functions: any[]) {
         .value();
 
       const poolUnits = chain(['instances', 'detachedInstances'])
-        .map(instanceStatus => lb[instanceStatus])
+        .map(instanceStatus => fn[instanceStatus])
         .flatten<any>()
         .map(instance => {
           const poolUnit = cloneDeep(poolUnitTemplate);
           if (!instance) {
             return poolUnit;
           }
-
-          return chain(poolValueCoordinates)
-            .filter({ on: 'instance' })
-            .reduce((acc, coordinate) => {
-              acc[coordinate.filterField] = instance[coordinate.localField];
-              return acc;
-            }, poolUnit)
-            .value();
         })
         .value();
 
-      if (!poolUnits.length) {
-        poolUnits.push(poolUnitTemplate);
-      }
-
-      return poolUnits;
+        if (!poolUnits.length) {
+          poolUnits.push(poolUnitTemplate);
+        }
+  
+        return poolUnits;
     })
     .flatten()
     .value();
@@ -61,88 +52,81 @@ function poolBuilder(functions: any[]) {
   return pool;
 }
 
-export interface ILoadBalancerFiltersProps {
+export interface IFunctionFiltersProps {
   app: Application;
 }
 
-export interface ILoadBalancerFiltersState {
+export interface IFunctionFiltersState {
   sortFilter: ISortFilter;
   tags: any[];
-  availabilityZoneHeadings: string[];
   providerTypeHeadings: string[];
   accountHeadings: string[];
   regionHeadings: string[];
-  stackHeadings: string[];
   detailHeadings: string[];
 }
 
-export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersProps, ILoadBalancerFiltersState> {
-  private debouncedUpdateLoadBalancerGroups: () => void;
+export class FunctionFilters extends React.Component<IFunctionFiltersProps, IFunctionFiltersState> {
+  private debouncedUpdateFunctionGroups: () => void;
   private groupsUpdatedSubscription: Subscription;
-  private loadBalancersRefreshUnsubscribe: () => void;
+  private functionsRefreshUnsubscribe: () => void;
   private locationChangeUnsubscribe: () => void;
 
-  constructor(props: ILoadBalancerFiltersProps) {
+  constructor(props: IFunctionFiltersProps) {
     super(props);
     this.state = {
-      sortFilter: LoadBalancerState.filterModel.asFilterModel.sortFilter,
-      tags: LoadBalancerState.filterModel.asFilterModel.tags,
-      availabilityZoneHeadings: [],
+      sortFilter: FunctionState.filterModel.asFilterModel.sortFilter,
+      tags: FunctionState.filterModel.asFilterModel.tags,
       providerTypeHeadings: [],
       accountHeadings: [],
       regionHeadings: [],
-      stackHeadings: [],
       detailHeadings: [],
     };
 
-    this.debouncedUpdateLoadBalancerGroups = debounce(this.updateLoadBalancerGroups, 300);
+    this.debouncedUpdateFunctionGroups = debounce(this.updateFunctionGroups, 300);
   }
 
   public componentDidMount(): void {
     const { app } = this.props;
 
-    this.groupsUpdatedSubscription = LoadBalancerState.filterService.groupsUpdatedStream.subscribe(() => {
-      this.setState({ tags: LoadBalancerState.filterModel.asFilterModel.tags });
+    this.groupsUpdatedSubscription = FunctionState.filterService.groupsUpdatedStream.subscribe(() => {
+      this.setState({ tags: FunctionState.filterModel.asFilterModel.tags });
     });
 
     if (app.functions && app.functions.loaded) {
-      this.updateLoadBalancerGroups();
+      this.updateFunctionGroups();
     }
 
-    this.loadBalancersRefreshUnsubscribe = app.functions.onRefresh(null, () => this.updateLoadBalancerGroups());
+    this.functionsRefreshUnsubscribe = app.functions.onRefresh(null, () => this.updateFunctionGroups());
 
     this.locationChangeUnsubscribe = $rootScope.$on('$locationChangeSuccess', () => {
-      LoadBalancerState.filterModel.asFilterModel.activate();
-      LoadBalancerState.filterService.updateLoadBalancerGroups(app);
+      FunctionState.filterModel.asFilterModel.activate();
+      FunctionState.filterService.updateFunctionGroups(app);
     });
   }
 
   public componentWillUnmount(): void {
     this.groupsUpdatedSubscription.unsubscribe();
-    this.loadBalancersRefreshUnsubscribe();
+    this.functionsRefreshUnsubscribe();
     this.locationChangeUnsubscribe();
   }
 
-  public updateLoadBalancerGroups = (applyParamsToUrl = true): void => {
+  public updateFunctionGroups = (applyParamsToUrl = true): void => {
     const { app } = this.props;
 
     if (applyParamsToUrl) {
-      LoadBalancerState.filterModel.asFilterModel.applyParamsToUrl();
+      FunctionState.filterModel.asFilterModel.applyParamsToUrl();
     }
-    LoadBalancerState.filterService.updateLoadBalancerGroups(app);
+    FunctionState.filterService.updateFunctionGroups(app);
 
-    const { availabilityZone, region, account } = digestDependentFilters({
-      sortFilter: LoadBalancerState.filterModel.asFilterModel.sortFilter,
-      dependencyOrder: ['providerType', 'account', 'region', 'availabilityZone'],
-      pool: poolBuilder(app.functions.data),
+  const { region, account } = digestDependentFilters({
+      sortFilter: FunctionState.filterModel.asFilterModel.sortFilter,
+      dependencyOrder: ['providerType', 'account', 'region'],
+      pool: poolBuilder(app.loadBalancers.data),
     });
 
     this.setState({
       accountHeadings: account,
       regionHeadings: region,
-      availabilityZoneHeadings: availabilityZone,
-      stackHeadings: ['(none)'].concat(this.getHeadingsForOption('stack')),
-      detailHeadings: ['(none)'].concat(this.getHeadingsForOption('detail')),
       providerTypeHeadings: this.getHeadingsForOption('type'),
     });
   };
@@ -152,41 +136,31 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
   };
 
   private clearFilters = (): void => {
-    LoadBalancerState.filterService.clearFilters();
-    LoadBalancerState.filterModel.asFilterModel.applyParamsToUrl();
-    LoadBalancerState.filterService.updateLoadBalancerGroups(this.props.app);
-  };
-
-  private handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    this.state.sortFilter.status[name] = Boolean(value);
-    this.updateLoadBalancerGroups();
+    FunctionState.filterService.clearFilters();
+    FunctionState.filterModel.asFilterModel.applyParamsToUrl();
+    FunctionState.filterService.updateFunctionGroups(this.props.app);
   };
 
   private handleSearchBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
     this.state.sortFilter.filter = target.value;
-    this.updateLoadBalancerGroups();
+    this.updateFunctionGroups();
   };
 
   private handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;
     this.state.sortFilter.filter = target.value;
     this.setState({ sortFilter: this.state.sortFilter });
-    this.debouncedUpdateLoadBalancerGroups();
+    this.debouncedUpdateFunctionGroups();
   };
 
   public render() {
-    const loadBalancersLoaded = this.props.app.functions.loaded;
+    const fuctionsLoaded = this.props.app.functions.loaded;
     const {
       accountHeadings,
       providerTypeHeadings,
       regionHeadings,
-      stackHeadings,
       detailHeadings,
-      availabilityZoneHeadings,
       sortFilter,
       tags,
     } = this.state;
@@ -217,7 +191,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
             </form>
           </FilterSection>
         </div>
-        {loadBalancersLoaded && (
+        {fuctionsLoaded && (
           <div className="content">
             {providerTypeHeadings.length > 1 && (
               <FilterSection heading="Provider" expanded={true}>
@@ -227,7 +201,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
                     isCloudProvider={true}
                     key={heading}
                     sortFilterType={sortFilter.providerType}
-                    onChange={this.updateLoadBalancerGroups}
+                    onChange={this.updateFunctionGroups}
                   />
                 ))}
               </FilterSection>
@@ -239,7 +213,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
                   heading={heading}
                   key={heading}
                   sortFilterType={sortFilter.account}
-                  onChange={this.updateLoadBalancerGroups}
+                  onChange={this.updateFunctionGroups}
                 />
               ))}
             </FilterSection>
@@ -250,18 +224,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
                   heading={heading}
                   key={heading}
                   sortFilterType={sortFilter.region}
-                  onChange={this.updateLoadBalancerGroups}
-                />
-              ))}
-            </FilterSection>
-
-            <FilterSection heading="Stack" expanded={true}>
-              {stackHeadings.map(heading => (
-                <FilterCheckbox
-                  heading={heading}
-                  key={heading}
-                  sortFilterType={sortFilter.stack}
-                  onChange={this.updateLoadBalancerGroups}
+                  onChange={this.updateFunctionGroups}
                 />
               ))}
             </FilterSection>
@@ -272,56 +235,7 @@ export class LoadBalancerFilters extends React.Component<ILoadBalancerFiltersPro
                   heading={heading}
                   key={heading}
                   sortFilterType={sortFilter.detail}
-                  onChange={this.updateLoadBalancerGroups}
-                />
-              ))}
-            </FilterSection>
-
-            <FilterSection heading="Instance Status" expanded={true}>
-              <div className="form">
-                <div className="checkbox">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={Boolean(sortFilter.status && sortFilter.status.Up)}
-                      onChange={this.handleStatusChange}
-                      name="Up"
-                    />
-                    Healthy
-                  </label>
-                </div>
-                <div className="checkbox">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={Boolean(sortFilter.status && sortFilter.status.Down)}
-                      onChange={this.handleStatusChange}
-                      name="Down"
-                    />
-                    Unhealthy
-                  </label>
-                </div>
-                <div className="checkbox">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={Boolean(sortFilter.status && sortFilter.status.OutOfService)}
-                      onChange={this.handleStatusChange}
-                      name="OutOfService"
-                    />
-                    Out of Service
-                  </label>
-                </div>
-              </div>
-            </FilterSection>
-
-            <FilterSection heading="Availability Zones" expanded={true}>
-              {availabilityZoneHeadings.map(heading => (
-                <FilterCheckbox
-                  heading={heading}
-                  key={heading}
-                  sortFilterType={sortFilter.availabilityZone}
-                  onChange={this.updateLoadBalancerGroups}
+                  onChange={this.updateFunctionGroups}
                 />
               ))}
             </FilterSection>

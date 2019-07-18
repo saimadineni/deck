@@ -200,6 +200,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
                     type="text"
                     className={`form-control input-sm no-spel ${errors.functionName ? 'invalid' : ''}`}
                     name="name"
+                    placeholder={app.name.concat('-')}
                     value={values.functionName}
                     onChange={(evt: any) => this.handleFunctionNameChange(evt.target.value)}
                   />

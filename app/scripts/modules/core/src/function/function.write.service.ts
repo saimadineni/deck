@@ -18,7 +18,7 @@ export interface IFunctionDeleteCommand extends IJob {
   cloudProvider: string;
   functionName: string;
   credentials: string;
-  regions?: string[];
+  regions: string;
   vpcId?: string;
   operation: string;
 }
