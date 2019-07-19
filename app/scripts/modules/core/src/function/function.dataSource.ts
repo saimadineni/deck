@@ -20,8 +20,8 @@ module(FUNCTION_DATA_SOURCE, [FUNCTION_READ_SERVICE]).run([
       return functionReader.loadFunctions(application.name);
     };
 
-    const addFunctions = (_application: Application, functionss: IFunction[]) => {
-      return $q.when(functionss);
+    const addFunctions = (_application: Application, functions: IFunction[]) => {
+      return $q.when(functions);
     };
 
     const addTags = (application: Application) => {

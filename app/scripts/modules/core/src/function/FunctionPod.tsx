@@ -15,13 +15,9 @@ export interface IFunctionPodProps {
 
 export class FunctionPod extends React.Component<IFunctionPodProps> {
   public render(): React.ReactElement<FunctionPod> {
-    const { grouping, application, parentHeading} = this.props;
+    const { grouping, application, parentHeading } = this.props;
     const subgroups = grouping.subgroups.map(subgroup => (
-      <Function
-        key={subgroup.heading}
-        application={application}
-        functionDef={subgroup.functionDef}
-      />
+      <Function key={subgroup.functionDef.functionName} application={application} functionDef={subgroup.functionDef} />
     ));
 
     return (

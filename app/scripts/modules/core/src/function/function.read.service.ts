@@ -19,20 +19,18 @@ export class FunctionReader {
   public static $inject = ['$q', 'functionTransformer'];
   public constructor(private $q: IQService, private functionTransformer: any) {}
 
-
   public loadFunctions(applicationName: string): IPromise<IFunctionSourceData[]> {
     console.log('Function Reader in the read service: ' + applicationName);
 
-    return (
-      API.all('functions')
+    return API.all('functions')
       .withParams({ region: 'us-west-2' })
-      .getList().then((functions: IFunctionSourceData) => {
+      .getList()
+      .then((functions: IFunctionSourceData[]) => {
         console.log('FUNCTIONS returned: ', functions);
-        // functions = this.functionTransformer.normalizeFunctionSet(functions);
-        // return this.$q.all(functions.map(fn => this.normalizeFunction(fn)));
-        return functions;
-      })
-    );
+        functions = this.functionTransformer.normalizeFunctionSet(functions);
+        return this.$q.all(functions.map(fn => this.normalizeFunction(fn)));
+        //return functions;
+      });
   }
 
   public getFunctionDetails(
@@ -58,12 +56,12 @@ export class FunctionReader {
   }
 
   private normalizeFunction(functionDef: IFunctionSourceData): IPromise<IFunction> {
-    console.log('*************** functionDef source data');
-    console.log(functionDef);
+    // console.log('*************** functionDef source data');
+    // console.log(functionDef);
     return this.functionTransformer.normalizeFunction(functionDef).then((fn: IFunction) => {
-      const nameParts: IComponentName = NameUtils.parseFunctionName(fn.name);
-      fn.name = nameParts.freeFormDetails
-      fn.cloudProvider = fn.provider || fn.cloudProvider;
+      // const nameParts: IComponentName = NameUtils.parseFunctionName(fn.name);
+      // fn.name = nameParts.freeFormDetails
+      fn.cloudProvider = fn.provider || fn.cloudProvider || 'aws';
       return fn;
     });
   }
@@ -71,7 +69,4 @@ export class FunctionReader {
 
 export const FUNCTION_READ_SERVICE = 'spinnaker.core.function.read.service';
 
-module(FUNCTION_READ_SERVICE, [require('./function.transformer').name]).service(
-  'functionReader',
-  FunctionReader,
-);
+module(FUNCTION_READ_SERVICE, [require('./function.transformer').name]).service('functionReader', FunctionReader);

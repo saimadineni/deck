@@ -22,11 +22,7 @@ export class FunctionFilterService {
 
   private addSearchFields(functionDef: IFunction): void {
     if (!functionDef.searchField) {
-      functionDef.searchField = [
-        functionDef.name,
-        functionDef.region.toLowerCase(),
-        functionDef.account
-      ].join(' ');
+      functionDef.searchField = [functionDef.name, functionDef.region.toLowerCase(), functionDef.account].join(' ');
     }
   }
 
@@ -56,7 +52,6 @@ export class FunctionFilterService {
       .value();
   }
 
-
   private diffSubgroups(oldGroups: IFunctionGroup[], newGroups: IFunctionGroup[]): void {
     const groupsToRemove: number[] = [];
 
@@ -68,7 +63,7 @@ export class FunctionFilterService {
         if (newGroup.functionDef) {
           oldGroup.functionDef = newGroup.functionDef;
         }
-       
+
         if (newGroup.subgroups) {
           this.diffSubgroups(oldGroup.subgroups, newGroup.subgroups);
         }
@@ -116,32 +111,38 @@ export class FunctionFilterService {
 
     const groups: IFunctionGroup[] = [];
     const functions = this.filterFunctionsForDisplay(application.functions.data);
+    console.log('FILTER SERVICE: ', functions);
     const grouped = groupBy(functions, 'account');
-
+    console.log('GROUPED: ', grouped);
     forOwn(grouped, (group, account) => {
-      const groupedByAccount = values(groupBy(group, 'account'));
-      const namesByAccount = groupedByAccount.map(g => g.map(fn => fn.name));
+      const groupedByRegion = values(groupBy(group, 'region'));
+      console.log('GROUPS BY REGION: ', groupedByRegion);
+      const namesByRegion = groupedByRegion.map(g => g.map(fn => fn.functionName));
+      console.log('NAMES BY REGION: ', namesByRegion);
       const functionNames =
-      namesByAccount.length > 1
-          ? intersection(...namesByAccount).reduce<{ [key: string]: boolean }>((acc, name) => {
+        namesByRegion.length > 1
+          ? intersection(...namesByRegion).reduce<{ [key: string]: boolean }>((acc, name) => {
               acc[name] = true;
               return acc;
             }, {})
           : {};
-      const subGroupings = groupBy(group, fn => `${fn.name}:${fn.account}`),
+      console.log('FUNCTION NAMES: ', functionNames);
+      const subGroupings = groupBy(group, fn => `${fn.functionName}:${fn.region}`),
         subGroups: IFunctionGroup[] = [];
-
-      forOwn(subGroupings, (subGroup, nameAndAccount) => {
-        const [name, account] = nameAndAccount.split(':');
+      console.log('subGroupings: ', subGroupings);
+      forOwn(subGroupings, (subGroup, nameAndRegion) => {
+        const [name, region] = nameAndRegion.split(':');
         const subSubGroups: IFunctionGroup[] = [];
+
         subGroup.forEach(functionDef => {
           subSubGroups.push({
             heading: functionDef.region,
             functionDef,
           });
         });
+        console.log('subSubGroups: ', subSubGroups);
 
-        const heading = `${name}${functionNames[name] && account ? ` (${account})` : ''}`;
+        const heading = `${name}${functionNames[name] && region ? ` (${region})` : ''}`;
         subGroups.push({
           heading,
           subgroups: sortBy(subSubGroups, 'heading'),
@@ -149,6 +150,7 @@ export class FunctionFilterService {
       });
 
       groups.push({ heading: account, subgroups: sortBy(subGroups, 'heading') });
+      console.log('FUNCTIONS: groups:: ', groups);
     });
 
     this.sortGroupsByHeading(groups);

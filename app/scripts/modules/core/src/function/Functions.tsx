@@ -40,12 +40,10 @@ export class Functions extends React.Component<IFunctionsProps, IFunctionsState>
   public componentDidMount(): void {
     const { app } = this.props;
 
-    this.groupsUpdatedListener = FunctionState.filterService.groupsUpdatedStream.subscribe(() =>
-      this.groupsUpdated(),
-    );
+    this.groupsUpdatedListener = FunctionState.filterService.groupsUpdatedStream.subscribe(() => this.groupsUpdated());
     FunctionState.filterModel.asFilterModel.activate();
     this.functionsRefreshUnsubscribe = app
-      .getDataSource('loadBalancers')
+      .getDataSource('functions')
       .onRefresh(null, () => this.updateFunctionGroups());
     app.setActiveState(app.loadBalancers);
     this.updateFunctionGroups();
@@ -79,7 +77,6 @@ export class Functions extends React.Component<IFunctionsProps, IFunctionsState>
     this.updateFunctionGroups();
   };
 
-  
   private tagCleared = (): void => {
     this.updateFunctionGroups();
   };
@@ -111,6 +108,7 @@ export class Functions extends React.Component<IFunctionsProps, IFunctionsState>
         <Spinner size="medium" />
       </div>
     );
+    console.log('this.state.groups: ', this.state.groups);
 
     return (
       <div className="main-content load-balancers">

@@ -1,9 +1,16 @@
 import { AWSProviderSettings } from 'amazon/aws.settings';
-import { Application } from '@spinnaker/core';
+import { Application, IFunctionSourceData } from '@spinnaker/core';
 
 import { IAmazonFunctionUpsertCommand, IAmazonFunction } from 'amazon/domain';
 
 export class AwsFunctionTransformer {
+  public normalizeFunction(functionDef: IAmazonFunction): IAmazonFunction {
+    let normalizedFunctionDef;
+    normalizedFunctionDef = functionDef;
+    //console.log('NORMALIZEd FUNCTION DEF: ', normalizedFunctionDef);
+    return normalizedFunctionDef;
+  }
+
   public static convertFunctionForEditing(functionDef: IAmazonFunction): IAmazonFunctionUpsertCommand {
     /* TODO */
     return null;
