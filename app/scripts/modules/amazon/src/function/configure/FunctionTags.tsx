@@ -37,7 +37,6 @@ export class FunctionTags extends React.Component<IFunctionTagsProps, IFunctionT
   private varsChanged = (tag: [{ [key: string]: string }], duplicateKeys: boolean) => {
     this.duplicateKeys = duplicateKeys;
     this.props.formik.setFieldValue('tags', Array(tag));
-    console.log(tag);
   };
 
   public render() {
@@ -45,10 +44,8 @@ export class FunctionTags extends React.Component<IFunctionTagsProps, IFunctionT
       <div className="form-group">
         <div className="col-md-11">
           <div className="sp-margin-m-bottom">
-            <b>Tags (optional)</b>
-            <HelpField id="aws.function.tags" />
+            <MapEditor model={{} as any} allowEmpty={true} onChange={this.varsChanged} required={true} />
           </div>
-          <MapEditor model={{} as any} allowEmpty={true} onChange={this.varsChanged} />
         </div>
       </div>
     );

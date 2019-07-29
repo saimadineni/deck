@@ -40,12 +40,15 @@ export class FunctionWriter {
     descriptor: string,
     params: any = {},
   ): IPromise<ITask> {
-    console.log('&&&&&&&&&&&&&&& *************** &&&&&&&&&&&&&&&& ');
-    console.log(command);
-    console.log('&&&&&&&&&&&&&&& %%%%%%%%%%%%%%%% &&&&&&&&&&&&&&&& ');
     Object.assign(command, params);
     command.type = 'lambdaFunction';
-    command.operation = 'createLambdaFunction';
+    if (descriptor.includes('Update')) {
+      console.log('******** UPDATING ********* ');
+      command.operation = 'updateLambdaFunctionConfiguration';
+    } else {
+      command.operation = 'createLambdaFunction';
+    }
+
     return TaskExecutor.executeTask({
       job: [command],
       application,

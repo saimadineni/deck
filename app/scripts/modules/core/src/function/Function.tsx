@@ -13,22 +13,19 @@ export interface IFunctionProps {
 }
 
 export class Function extends React.Component<IFunctionProps> {
-  public static defaultProps: Partial<IFunctionProps> = {
-    
-  };
+  public static defaultProps: Partial<IFunctionProps> = {};
 
   public render(): React.ReactElement<Function> {
     const { application, functionDef } = this.props;
-
+    //console.log('Function Def : ', functionDef);
     const params = {
       application: application.name,
       region: functionDef.region,
       account: functionDef.account,
-      name: functionDef.name,
-      vpcId: functionDef.vpcId,
+      name: functionDef.functionName,
       provider: functionDef.cloudProvider,
     };
-
+    //console.log('Params: ', params);
     return (
       <div className="pod-subgroup function">
         <div className="function-header sticky-header-2">

@@ -130,10 +130,10 @@ module(AMAZON_MODULE, [
       ClusterContainer: AmazonLoadBalancerClusterContainer,
       LoadBalancersTag: AmazonLoadBalancersTag,
     },
+
     function: {
-      details: '',
+      details: require('./function/details/AmazonFunctionDetails'),
       CreateFunctionModal: CreateLambdaFunction,
-      detailsController: 'awsFunctionDetailsCtrl',
       transformer: AwsFunctionTransformer,
     },
 

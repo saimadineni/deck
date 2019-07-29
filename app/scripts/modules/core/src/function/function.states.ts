@@ -30,13 +30,13 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
         },
       },
       resolve: {
-        accountId: ['$stateParams', ($stateParams: StateParams) => $stateParams.accountId],
-        functions: [
+        accountId: ['$stateParams', ($stateParams: StateParams) => $stateParams.account],
+        functionObj: [
           '$stateParams',
           ($stateParams: StateParams) => {
             return {
               name: $stateParams.name,
-              accountId: $stateParams.accountId,
+              accountId: $stateParams.account,
               region: $stateParams.region,
               vpcId: $stateParams.vpcId,
             };
@@ -46,8 +46,8 @@ module(FUNCTION_STATES, [APPLICATION_STATE_PROVIDER]).config([
       data: {
         pageTitleDetails: {
           title: 'Function Details',
-          nameParam: 'name',
-          accountParam: 'account',
+          nameParam: 'functionName',
+          accountParam: 'credentials',
           regionParam: 'region',
         },
         history: {

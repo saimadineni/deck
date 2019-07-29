@@ -5,24 +5,19 @@ import { head, sortBy } from 'lodash';
 import {
   Application,
   CONFIRMATION_MODAL_SERVICE,
-  IApplicationSecurityGroup,
   IFunction,
   FUNCTION_READ_SERVICE,
   FunctionReader,
-  SETTINGS,
-  FirewallLabels,
   MANAGED_RESOURCE_DETAILS_INDICATOR,
 } from '@spinnaker/core';
 
-import {
-  IAmazonFunction,
-  IAmazonFunctionSourceData,
-} from 'amazon/domain';
+import { IAmazonFunction } from 'amazon/domain';
 
 import { FUNCTION_ACTIONS } from './functionActions.component';
+import { IAmazonFunctionSourceData } from 'amazon/domain/IAmazonFunctionSourceData';
 
 export interface IFunctionFromStateParams {
-  accountId: string;
+  account: string;
   region: string;
   functionName: string;
 }
@@ -32,17 +27,8 @@ export class AwsFunctionDetailsController implements IController {
   public functionFromParams: IFunctionFromStateParams;
   public functionDef: IAmazonFunction;
   public state = { loading: true };
-  
 
-
-  public static $inject = [
-    '$scope',
-    '$state',
-    '$q',
-    'functionDef',
-    'app',
-    'functionReader',
-  ];
+  public static $inject = ['$scope', '$state', '$q', 'functionDef', 'app', 'functionReader'];
   constructor(
     private $scope: IScope,
     private $state: StateService,
@@ -79,14 +65,13 @@ export class AwsFunctionDetailsController implements IController {
       return (
         test.functionName === this.functionFromParams.functionName &&
         test.region === this.functionFromParams.region &&
-        test.account === this.functionFromParams.accountId
+        test.account === this.functionFromParams.account
       );
     });
-
     if (appFunction) {
       const detailsLoader = this.functionReader.getFunctionDetails(
         'aws',
-        this.functionFromParams.accountId,
+        this.functionFromParams.account,
         this.functionFromParams.region,
         this.functionFromParams.functionName,
       );
@@ -94,10 +79,9 @@ export class AwsFunctionDetailsController implements IController {
         (details: IAmazonFunctionSourceData[]) => {
           this.functionDef = appFunction;
           this.state.loading = false;
-          
-          if (details.length) {
-            this.functionDef.credentials = this.functionFromParams.accountId;
 
+          if (details.length) {
+            this.functionDef.credentials = this.functionFromParams.account;
           }
         },
         () => this.autoClose(),

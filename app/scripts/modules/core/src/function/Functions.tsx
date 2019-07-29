@@ -108,7 +108,6 @@ export class Functions extends React.Component<IFunctionsProps, IFunctionsState>
         <Spinner size="medium" />
       </div>
     );
-    console.log('this.state.groups: ', this.state.groups);
 
     return (
       <div className="main-content load-balancers">

@@ -50,9 +50,6 @@ export class LoadBalancerReader {
   }
 
   private normalizeLoadBalancer(loadBalancer: ILoadBalancerSourceData): IPromise<ILoadBalancer> {
-    // console.log('$$$$$$$$$$ ');
-    // console.log(loadBalancer);
-    // console.log('$$$$$$$$$$ ');
     return this.loadBalancerTransformer.normalizeLoadBalancer(loadBalancer).then((lb: ILoadBalancer) => {
       const nameParts: IComponentName = NameUtils.parseLoadBalancerName(lb.name);
       lb.stack = nameParts.stack;

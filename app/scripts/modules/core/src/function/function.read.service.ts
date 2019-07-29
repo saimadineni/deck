@@ -26,10 +26,8 @@ export class FunctionReader {
       .withParams({ region: 'us-west-2' })
       .getList()
       .then((functions: IFunctionSourceData[]) => {
-        console.log('FUNCTIONS returned: ', functions);
         functions = this.functionTransformer.normalizeFunctionSet(functions);
         return this.$q.all(functions.map(fn => this.normalizeFunction(fn)));
-        //return functions;
       });
   }
 
@@ -40,24 +38,17 @@ export class FunctionReader {
     name: string,
   ): IPromise<IFunctionSourceData[]> {
     return API.all('functions')
-      .all(account)
-      .all(region)
-      .all(name)
-      .withParams({ provider: cloudProvider })
+      .withParams({ provider: cloudProvider, functionName: name, region: region, account: account })
       .get();
   }
 
   public listFunctions(cloudProvider: string): IPromise<IFunctionByAccount[]> {
-    console.log('List Functions with: ' + cloudProvider);
-
     return API.all('functions')
       .withParams({ provider: cloudProvider })
       .getList();
   }
 
   private normalizeFunction(functionDef: IFunctionSourceData): IPromise<IFunction> {
-    // console.log('*************** functionDef source data');
-    // console.log(functionDef);
     return this.functionTransformer.normalizeFunction(functionDef).then((fn: IFunction) => {
       // const nameParts: IComponentName = NameUtils.parseFunctionName(fn.name);
       // fn.name = nameParts.freeFormDetails

@@ -15,7 +15,7 @@ export interface IAmazonFunctionSourceData extends IFunctionSourceData {
   functionArn: string;
   handler: string;
   layers: string;
-  lastModified: string;
+  lastModified: number;
   type: string;
   vpcId: string;
   memorySize: string;

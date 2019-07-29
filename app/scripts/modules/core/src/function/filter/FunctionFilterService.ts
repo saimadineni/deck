@@ -22,7 +22,9 @@ export class FunctionFilterService {
 
   private addSearchFields(functionDef: IFunction): void {
     if (!functionDef.searchField) {
-      functionDef.searchField = [functionDef.name, functionDef.region.toLowerCase(), functionDef.account].join(' ');
+      functionDef.searchField = [functionDef.functionName, functionDef.region.toLowerCase(), functionDef.account].join(
+        ' ',
+      );
     }
   }
 
@@ -111,14 +113,11 @@ export class FunctionFilterService {
 
     const groups: IFunctionGroup[] = [];
     const functions = this.filterFunctionsForDisplay(application.functions.data);
-    console.log('FILTER SERVICE: ', functions);
     const grouped = groupBy(functions, 'account');
-    console.log('GROUPED: ', grouped);
+
     forOwn(grouped, (group, account) => {
       const groupedByRegion = values(groupBy(group, 'region'));
-      console.log('GROUPS BY REGION: ', groupedByRegion);
       const namesByRegion = groupedByRegion.map(g => g.map(fn => fn.functionName));
-      console.log('NAMES BY REGION: ', namesByRegion);
       const functionNames =
         namesByRegion.length > 1
           ? intersection(...namesByRegion).reduce<{ [key: string]: boolean }>((acc, name) => {
@@ -126,10 +125,10 @@ export class FunctionFilterService {
               return acc;
             }, {})
           : {};
-      console.log('FUNCTION NAMES: ', functionNames);
+
       const subGroupings = groupBy(group, fn => `${fn.functionName}:${fn.region}`),
         subGroups: IFunctionGroup[] = [];
-      console.log('subGroupings: ', subGroupings);
+
       forOwn(subGroupings, (subGroup, nameAndRegion) => {
         const [name, region] = nameAndRegion.split(':');
         const subSubGroups: IFunctionGroup[] = [];
@@ -140,7 +139,6 @@ export class FunctionFilterService {
             functionDef,
           });
         });
-        console.log('subSubGroups: ', subSubGroups);
 
         const heading = `${name}${functionNames[name] && region ? ` (${region})` : ''}`;
         subGroups.push({
@@ -148,9 +146,7 @@ export class FunctionFilterService {
           subgroups: sortBy(subSubGroups, 'heading'),
         });
       });
-
       groups.push({ heading: account, subgroups: sortBy(subGroups, 'heading') });
-      console.log('FUNCTIONS: groups:: ', groups);
     });
 
     this.sortGroupsByHeading(groups);

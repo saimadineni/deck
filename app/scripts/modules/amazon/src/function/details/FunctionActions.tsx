@@ -14,9 +14,8 @@ import {
 
 import { IAmazonFunction, IAmazonFunctionDeleteCommand } from 'amazon/domain';
 
-import { IFunctionFromStateParams } from './functionDetails.controller';
+import { IFunctionFromStateParams } from './AmazonFunctionDetails';
 import { CreateLambdaFunction } from '../CreateLambdaFunction';
-
 
 export interface IFunctionActionsProps {
   app: Application;
@@ -33,10 +32,9 @@ export class FunctionActions extends React.Component<IFunctionActionsProps, IFun
     super(props);
 
     const { app, functionDef } = this.props;
-
     let application: Application;
 
-    const functionAppName = function.functionName.split('-')[0];
+    const functionAppName = functionDef.functionName.split('-')[0];
     if (functionAppName === app.name) {
       // Name matches the currently active application
       application = app;
@@ -64,30 +62,33 @@ export class FunctionActions extends React.Component<IFunctionActionsProps, IFun
     FunctionModal.show({ app: application, functionDef });
   };
 
-  public deleteLoadBalancer = (): void => {
+  public deleteFunction = (): void => {
     const { app, functionDef, functionFromParams } = this.props;
 
     const taskMonitor = {
       application: app,
       title: 'Deleting ' + functionFromParams.functionName,
     };
-
+    console.log(
+      'DELETING functionDef.credentials: ',
+      functionDef.credentials,
+      ' functionDef.account: ',
+      functionDef.account,
+    );
     const command: IAmazonFunctionDeleteCommand = {
       cloudProvider: functionDef.cloudProvider,
       functionName: functionDef.functionName,
-      runtime: functionDef.runtime,
       region: functionDef.region,
-      credentials: functionDef.credentials,
-      vpcId: functionDef.vpcId ? functionDef.vpcId : null,
+      credentials: functionDef.account,
     };
 
     const submitMethod = () => FunctionWriter.deleteFunction(command, app);
 
     ReactInjector.confirmationModalService.confirm({
-      header: `Really delete ${functionFromParams.functionName} in ${functionFromParams.region}: ${functionFromParams.accountId}?`,
+      header: `Really delete ${functionFromParams.functionName} in ${functionFromParams.region}: ${functionFromParams.account}?`,
       buttonText: `Delete ${functionFromParams.functionName}`,
       provider: 'aws',
-      account: functionFromParams.accountId,
+      account: functionFromParams.account,
       applicationName: app.name,
       taskMonitorConfig: taskMonitor,
       submitMethod,
@@ -116,9 +117,9 @@ export class FunctionActions extends React.Component<IFunctionActionsProps, IFun
                 Edit Function
               </a>
             </li>
-            {!functionDef.functionName && (
+            {functionDef.functionName && (
               <li>
-                <a className="clickable" onClick={this.deleteLoadBalancer}>
+                <a className="clickable" onClick={this.deleteFunction}>
                   Delete Function
                 </a>
               </li>

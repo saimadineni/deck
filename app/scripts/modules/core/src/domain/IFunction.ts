@@ -13,6 +13,7 @@ export interface IFunction extends ITaggedEntity {
   cloudProvider?: string;
   detail?: string;
   name?: string;
+  functionName?: string;
   moniker?: IMoniker;
   provider?: string;
   region?: string;

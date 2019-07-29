@@ -15,7 +15,7 @@ export const filterModelConfig: IFilterConfig[] = [
 ];
 
 export interface IFunctionFilterModel extends IFilterModel {
-   groups: IFunctionGroup[];
+  groups: IFunctionGroup[];
 }
 
 export class FunctionFilterModel {
