@@ -64,7 +64,7 @@ class LoadBalancersSearchResultType extends SearchResultType<ILoadBalancerSearch
     };
 
     const results = resultSet.results.slice().sort(itemSortFn);
-
+    console.log('IN SEARCH RESULT TYPE ************************************ ');
     return (
       <TableBody>
         {results

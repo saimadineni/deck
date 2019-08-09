@@ -1,35 +1,26 @@
 import { Ng1StateDeclaration, StateParams } from '@uirouter/angularjs';
 import { $rootScope } from 'ngimport';
 
-// import { IFunctionsGroup } from 'core/domain';
+import { IFunctionGroup } from 'core/domain';
 import { IFilterConfig, IFilterModel } from 'core/filterModel/IFilterModel';
 import { FilterModelService } from 'core/filterModel';
 import { UrlParser } from 'core/navigation/urlParser';
 
 export const filterModelConfig: IFilterConfig[] = [
   { model: 'account', param: 'acct', type: 'trueKeyObject' },
-  { model: 'availabilityZone', param: 'zone', type: 'trueKeyObject', filterLabel: 'availability zone' },
   { model: 'detail', param: 'detail', type: 'trueKeyObject' },
   { model: 'filter', param: 'q', clearValue: '', type: 'string', filterLabel: 'search' },
   { model: 'providerType', type: 'trueKeyObject', filterLabel: 'provider' },
   { model: 'region', param: 'reg', type: 'trueKeyObject' },
-  { model: 'showInstances', displayOption: true, type: 'boolean' },
-  { model: 'showServerGroups', param: 'hideServerGroups', displayOption: true, type: 'inverse-boolean' },
-  { model: 'stack', param: 'stack', type: 'trueKeyObject' },
-  {
-    model: 'status',
-    type: 'trueKeyObject',
-    filterTranslator: { Up: 'Healthy', Down: 'Unhealthy', OutOfService: 'Out of Service' },
-  },
 ];
 
-export interface IFunctionsFilterModel extends IFilterModel {
-  // groups: IFunctionsGroup[];
+export interface IFunctionFilterModel extends IFilterModel {
+  groups: IFunctionGroup[];
 }
 
-export class FunctionsFilterModel {
+export class FunctionFilterModel {
   private mostRecentParams: any;
-  public asFilterModel: IFunctionsFilterModel;
+  public asFilterModel: IFunctionFilterModel;
 
   constructor() {
     this.asFilterModel = FilterModelService.configureFilterModel(this as any, filterModelConfig);

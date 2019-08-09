@@ -11,18 +11,21 @@ import {
   noop,
   MapEditor,
   HelpField,
+  Application,
 } from '@spinnaker/core';
 
 import { IAmazonFunction, IAmazonFunctionUpsertCommand } from 'amazon/domain';
 import { FunctionBasicInformation } from './configure/FunctionBasicInformation';
 import { ExecutionRole } from './configure/ExecutionRole';
-
+import { FunctionSettings } from './configure/FunctionSettings';
 import { FunctionEnvironmentVariables } from './configure/FunctionEnvironmentVariables';
 import { Network } from './configure/Network';
 import { AwsFunctionTransformer } from './function.transformer';
 import { FunctionTags } from './configure/FunctionTags';
+import { FunctionDebugAndErrorHandling } from './configure/FunctionDebugAndErrorHandling';
 
 export interface IAmazonCreateFunctionProps extends IFunctionModalProps {
+  app: Application;
   functionDef: IAmazonFunction;
 }
 export interface IAmazonCreateFunctionState {
@@ -39,11 +42,12 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
 
   constructor(props: IAmazonCreateFunctionProps) {
     super(props);
+    const functionTransformer = new AwsFunctionTransformer();
     const funcCommand = props.command
       ? (props.command as IAmazonFunctionUpsertCommand) // ejecting from a wizard
       : props.functionDef
-      ? AwsFunctionTransformer.convertFunctionForEditing(props.functionDef)
-      : AwsFunctionTransformer.constructNewAwsFunctionTemplate(props.app);
+      ? functionTransformer.convertFunctionForEditing(props.functionDef)
+      : functionTransformer.constructNewAwsFunctionTemplate(props.app);
 
     this.state = {
       isNew: !props.functionDef,
@@ -122,7 +126,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
 
     let heading = forPipelineConfig ? 'Configure Existing Function' : 'Create New Function';
     if (!isNew) {
-      heading = `Edit ${functionCommand.name}: ${functionCommand.region}: ${functionCommand.credentials}`;
+      heading = `Edit ${functionCommand.functionName}: ${functionCommand.region}: ${functionCommand.credentials}`;
     }
 
     return (
@@ -151,7 +155,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
                 )}
               />
               <WizardPage
-                label="Permissions"
+                label="Execution Role"
                 wizard={wizard}
                 order={nextIdx()}
                 render={({ innerRef }) => {
@@ -161,7 +165,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
                 }}
               />
               <WizardPage
-                label="Environment Variables"
+                label="Environment"
                 wizard={wizard}
                 order={nextIdx()}
                 render={({ innerRef }) => {
@@ -187,11 +191,43 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
                 }}
               />
               <WizardPage
+                label="Settings"
+                wizard={wizard}
+                order={nextIdx()}
+                render={({ innerRef }) => {
+                  return (
+                    <FunctionSettings
+                      ref={innerRef}
+                      app={app}
+                      formik={formik}
+                      isNew={isNew}
+                      functionDef={functionDef}
+                    />
+                  );
+                }}
+              />
+              <WizardPage
                 label="Network"
                 wizard={wizard}
                 order={nextIdx()}
                 render={({ innerRef }) => {
                   return <Network ref={innerRef} app={app} formik={formik} isNew={isNew} functionDef={functionDef} />;
+                }}
+              />
+              <WizardPage
+                label="Debugging and Error Handling"
+                wizard={wizard}
+                order={nextIdx()}
+                render={({ innerRef }) => {
+                  return (
+                    <FunctionDebugAndErrorHandling
+                      ref={innerRef}
+                      app={app}
+                      formik={formik}
+                      isNew={isNew}
+                      functionDef={functionDef}
+                    />
+                  );
                 }}
               />
             </>

@@ -34,12 +34,6 @@ const Content: React.FC = () => {
       .then(resp => resp.json())
       .then(data => {
         const parsedData = parseFunctionReturns(data);
-        console.log(
-          util.inspect(parseFunctionReturns(data), {
-            showHidden: false,
-            depth: null,
-          }),
-        );
         setFunctions(parsedData);
       })
       .catch(console.log);
