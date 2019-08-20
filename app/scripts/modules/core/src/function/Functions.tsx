@@ -82,6 +82,7 @@ export class Functions extends React.Component<IFunctionsProps, IFunctionsState>
   };
 
   public render(): React.ReactElement<Functions> {
+    console.log('FUNCTIONS: ', this.state.groups.length);
     const groupings = this.state.initialized ? (
       <div>
         {this.state.groups.map(group => (
