@@ -54,7 +54,7 @@ export class FunctionEnvironmentVariables
             <b>Environment Variables (optional)</b>
             <HelpField id="aws.function.env.vars" />
           </div>
-          <MapEditor model={{} as any} allowEmpty={true} onChange={this.varsChanged} />
+          <MapEditor model={values.envVariables} allowEmpty={true} onChange={this.varsChanged} />
         </div>
         <div className="col-md-11">
           <div className="sp-margin-m-bottom">

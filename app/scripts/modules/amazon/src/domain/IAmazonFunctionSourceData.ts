@@ -30,4 +30,7 @@ export interface IAmazonFunctionSourceData extends IFunctionSourceData {
   // sure clouddriver is cleaned up, leave this dirtiness in here
   vpcid?: string;
   envVariables: {};
+  environment: {
+    variables: {};
+  };
 }

@@ -13,7 +13,6 @@ export interface IExecutionRoleProps {
 }
 
 export interface IExecutionRoleState {
-  //availableRoles: Array<{ label: string; value: string }>;
   some: '';
 }
 
@@ -29,21 +28,6 @@ export class ExecutionRole extends React.Component<IExecutionRoleProps, IExecuti
   public validate(): FormikErrors<IAmazonFunctionUpsertCommand> {
     return {};
   }
-
-  public componentDidMount() {
-    // this.setState({ createNewRole: true });
-  }
-
-  public componentWillReceiveProps(nextProps: IExecutionRoleProps): void {
-    //this.setState(this.getState(nextProps));
-  }
-
-  // private getState(props: IExecutionRoleProps): IExecutionRoleState {
-  //     const roleExists = props.isNew ? false : true;
-  //     return {
-  //       //availableRoles: AuthenticationService.getAuthenticatedUser().roles
-  //     };
-  //   }
 
   public render() {
     const { errors, values } = this.props.formik;
@@ -62,7 +46,7 @@ export class ExecutionRole extends React.Component<IExecutionRoleProps, IExecuti
                   type="text"
                   placeholder="Enter role ARN"
                   className="form-control input-sm no-spel"
-                  name="roleARN"
+                  name="role"
                   value={values.role}
                 />
               )}

@@ -21,7 +21,7 @@ export class AwsFunctionTransformer {
       memorySize: functionDef.memorySize,
       timeout: functionDef.timeout,
       vpcId: functionDef.vpcId,
-      envVariables: functionDef.envVariables,
+      envVariables: functionDef.environment ? functionDef.environment.variables : {},
       functionName: functionDef.functionName,
       region: functionDef.region,
       credentials: functionDef.account,
