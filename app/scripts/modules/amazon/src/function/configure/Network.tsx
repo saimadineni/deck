@@ -5,6 +5,8 @@ import {
   FormikFormField,
   IWizardPageComponent,
   IVpc,
+  ISubnet, // adding this because there is an IVpc, might remove later
+  ISecurityGroup, // adding this because there is an IVpc, might remove later
   HelpField,
   TextInput,
   ReactSelectInput,
@@ -14,6 +16,7 @@ import { FormikErrors, FormikProps, Field } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction, ITargetTrackingConfiguration } from 'amazon/domain';
 import { VpcReader } from 'amazon/vpc';
+import { SubnetSelectField } from 'amazon/subnet';
 
 export interface INetworkProps {
   formik: FormikProps<IAmazonFunctionUpsertCommand>;
@@ -72,6 +75,50 @@ export class Network extends React.Component<INetworkProps, INetworkState>
                   />
                 )}
                 // onChange={this.accountChanged}
+                required={false}
+              />
+            )}
+          </div>
+          <div className="sp-margin-m-bottom">
+            {values.credentials && (
+              <FormikFormField
+                name="subnetId"
+                label="Subnet Id"
+                help={<HelpField id="aws.function.execution.role" />}
+                fastField={false}
+                input={props => (
+                  <ReactSelectInput
+                    inputClassName="cloudfoundry-react-select"
+                    {...props}
+                    stringOptions={vpcOptions
+                      .filter((v: IVpc) => v.account === values.credentials)
+                      .map((v: IVpc) => v.name + ' (' + v.id + ')')}
+                    clearable={false}
+                  />
+                )}
+                // onChange={this.accountChanged} Don't need this because we are using a Formik field
+                required={false}
+              />
+            )}
+          </div>
+          <div className="sp-margin-m-bottom">
+            {values.credentials && (
+              <FormikFormField
+                name="securityGroupId"
+                label="Security Group Id"
+                help={<HelpField id="aws.function.execution.role" />}
+                fastField={false}
+                input={props => (
+                  <ReactSelectInput
+                    inputClassName="cloudfoundry-react-select"
+                    {...props}
+                    stringOptions={vpcOptions
+                      .filter((v: IVpc) => v.account === values.credentials)
+                      .map((v: IVpc) => v.name + ' (' + v.id + ')')}
+                    clearable={false}
+                  />
+                )}
+                // onChange={this.accountChanged} Don't need this because we are using a Formik field
                 required={false}
               />
             )}
