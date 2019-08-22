@@ -16,7 +16,7 @@ import { FormikErrors, FormikProps, Field } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction, ITargetTrackingConfiguration } from 'amazon/domain';
 import { VpcReader } from 'amazon/vpc';
-import { SubnetSelectField } from 'amazon/subnet';
+import { SubnetSelectInput, SubnetSelectField } from 'amazon/subnet';
 
 export interface INetworkProps {
   formik: FormikProps<IAmazonFunctionUpsertCommand>;
@@ -26,6 +26,7 @@ export interface INetworkProps {
 
 export interface INetworkState {
   vpcOptions: Array<{}>;
+  subnetOptions: Array<{}>;
   account: {};
 }
 
@@ -34,10 +35,12 @@ export class Network extends React.Component<INetworkProps, INetworkState>
   constructor(props: INetworkProps) {
     super(props);
     this.getAllVpcs();
+    // this.getAllSubnets();
   }
 
   public state: INetworkState = {
     vpcOptions: [],
+    subnetOptions: [],
     account: null,
   };
   private getAllVpcs(): void {
@@ -46,13 +49,21 @@ export class Network extends React.Component<INetworkProps, INetworkState>
     });
     // console.log(this.state.vpcOptions);
   }
+  private getAllSubnets(): void {
+    SubnetSelectInput.componentDidUpdate.then(Subnets => {
+      this.state.subnetOptions = Subnets;
+    });
+    // console.log(this.state.subnetOptions);
+  }
+
   public validate(): FormikErrors<IAmazonFunctionUpsertCommand> {
     return {};
   }
 
   public render() {
-    const { vpcOptions, account } = this.state;
+    const { vpcOptions, subnetOptions, account } = this.state;
     const { errors, values } = this.props.formik;
+    SubnetSelectField;
 
     return (
       <div className="form-group">
@@ -79,7 +90,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
               />
             )}
           </div>
-          <div className="sp-margin-m-bottom">
+          {/* <div className="sp-margin-m-bottom">
             {values.credentials && (
               <FormikFormField
                 name="subnetId"
@@ -90,18 +101,17 @@ export class Network extends React.Component<INetworkProps, INetworkState>
                   <ReactSelectInput
                     inputClassName="cloudfoundry-react-select"
                     {...props}
-                    stringOptions={vpcOptions
-                      .filter((v: IVpc) => v.account === values.credentials)
-                      .map((v: IVpc) => v.name + ' (' + v.id + ')')}
+                    stringOptions={subnetOptions
+                      .filter((v: IVPC) => v.account === values.credentials)
+                      .map((v: ISubnet) => v.name + ' (' + v.id + ')')}
                     clearable={false}
                   />
                 )}
-                // onChange={this.accountChanged} Don't need this because we are using a Formik field
                 required={false}
               />
             )}
-          </div>
-          <div className="sp-margin-m-bottom">
+          </div> */}
+          {/* <div className="sp-margin-m-bottom">
             {values.credentials && (
               <FormikFormField
                 name="securityGroupId"
@@ -118,11 +128,10 @@ export class Network extends React.Component<INetworkProps, INetworkState>
                     clearable={false}
                   />
                 )}
-                // onChange={this.accountChanged} Don't need this because we are using a Formik field
                 required={false}
               />
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     );
