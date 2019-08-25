@@ -33,6 +33,11 @@ export class AwsFunctionTransformer {
         targetArn: functionDef.deadLetterConfig ? functionDef.deadLetterConfig.targetArn : '',
       },
       KMSKeyArn: functionDef.KMSKeyArn ? functionDef.KMSKeyArn : '',
+      vpcConfig: {
+        subnetIds: functionDef.vpcConfig.subnetIds,
+        securityGroupIds: functionDef.vpcConfig.securityGroupIds,
+        vpcId: functionDef.vpcConfig.vpcId,
+      },
     };
     return toEdit;
   }
@@ -65,6 +70,11 @@ export class AwsFunctionTransformer {
         mode: 'PassThrough',
       },
       KMSKeyArn: '',
+      vpcConfig: {
+        subnetIds: [],
+        securityGroupIds: [],
+        vpcId: '',
+      },
     };
   }
 }

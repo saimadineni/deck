@@ -21,6 +21,7 @@ import { FormikProps, FormikErrors } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
 import { Subject, Observable } from 'rxjs';
+import { ISubnetOption } from 'amazon/loadBalancer/configure/common/LoadBalancerLocation';
 
 const availableRuntimes = [
   'nodejs',
@@ -154,6 +155,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
     const { app } = this.props;
     const { errors, values } = this.props.formik;
     const { accounts, regions } = this.state;
+    console.log('VALUES: ', values);
     return (
       <div className="container-fluid form-horizontal ">
         <div className="sp-margin-m-bottom">
@@ -164,9 +166,9 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
               <ReactSelectInput
                 {...props}
                 inputClassName="cloudfoundry-react-select"
+                value={values.credentials}
                 stringOptions={accounts.map((acc: IAccount) => acc.name)}
                 clearable={true}
-                value={values.credentials}
               />
             )}
             // Dont know why this is not working :(
