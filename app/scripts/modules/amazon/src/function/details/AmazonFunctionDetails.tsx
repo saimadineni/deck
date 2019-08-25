@@ -11,7 +11,6 @@ import {
   IAmazonFunction,
   ManagedResourceDetailsIndicator,
 } from '@spinnaker/core';
-import { timestamp } from 'core/utils';
 import { IAmazonFunctionSourceData } from 'amazon/domain';
 import { FunctionActions } from './FunctionActions';
 
@@ -31,9 +30,6 @@ export class AmazonFunctionDetails extends React.Component<IAmazonFunctionDetail
   private static functionReader = new FunctionReader();
   constructor(props: IAmazonFunctionDetailsProps) {
     super(props);
-
-    console.log('AmazonFunctionDetails::::: ', props);
-
     this.state = {
       loading: true,
     };

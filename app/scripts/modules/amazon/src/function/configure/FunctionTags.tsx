@@ -40,11 +40,12 @@ export class FunctionTags extends React.Component<IFunctionTagsProps, IFunctionT
   };
 
   public render() {
+    const { values } = this.props.formik;
     return (
       <div className="form-group">
         <div className="col-md-11">
           <div className="sp-margin-m-bottom">
-            <MapEditor model={{} as any} allowEmpty={true} onChange={this.varsChanged} required={true} />
+            <MapEditor model={values.tags} allowEmpty={true} onChange={this.varsChanged} required={true} />
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { IFunction, IFunctionDeleteCommand, IFunctionUpsertCommand } from '@spinnaker/core';
-import { string } from 'prop-types';
 
 export interface IAmazonFunction extends IFunction {
   credentials?: string;
@@ -22,6 +21,11 @@ export interface IAmazonFunction extends IFunction {
     targetArn: string;
   };
   KMSKeyArn: string;
+  vpcConfig: {
+    securityGroupIds: [];
+    subnetIds: [];
+    vpcId: string;
+  };
 }
 
 export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
@@ -33,7 +37,6 @@ export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
   tags: [{}];
   memorySize: number;
   timeout: number;
-  vpcId?: string;
   envVariables: {};
   publish: boolean;
   tracingConfig: {
@@ -43,6 +46,11 @@ export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
     targetArn: string;
   };
   KMSKeyArn: string;
+  vpcConfig: {
+    securityGroupIds: [];
+    subnetIds: [];
+    vpcId: string;
+  };
 }
 
 export interface IAmazonFunctionDeleteCommand extends IFunctionDeleteCommand {
