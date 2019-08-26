@@ -35,6 +35,11 @@ export interface ISubnetOption {
   vpcId: string;
 }
 
+export interface ISubnetOption {
+  subnetId: string;
+  vpcId: string;
+}
+
 export interface INetworkProps {
   formik: FormikProps<IAmazonFunctionUpsertCommand>;
   isNew?: boolean;
