@@ -246,6 +246,7 @@ export class LoadBalancerFilterService {
       });
 
       groups.push({ heading: account, subgroups: sortBy(subGroups, 'heading') });
+      console.log('LB: GROUPS: ', groups);
     });
 
     this.sortGroupsByHeading(groups);

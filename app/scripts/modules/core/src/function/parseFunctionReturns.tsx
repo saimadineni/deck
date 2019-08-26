@@ -52,7 +52,7 @@ export const parseFunctionReturns: any = (functionArray: Array<Function>) => {
     returnArray[accountSeen[account]].region[accountRegionSeen[accountRegion]].functions.push(element);
   });
 
-  console.log(accountRegionSeen);
+  //console.log(accountRegionSeen);
 
   return returnArray;
 };

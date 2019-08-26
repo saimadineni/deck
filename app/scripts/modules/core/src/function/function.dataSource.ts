@@ -13,24 +13,21 @@ module(FUNCTION_DATA_SOURCE, [FUNCTION_READ_SERVICE]).run([
   '$q',
   'functionReader',
   ($q: IQService, functionReader: FunctionReader) => {
-    console.log('In the FunctionReader');
-
     const functions = (application: Application) => {
-      console.log('In the FunctionReader Application:' + application);
       return functionReader.loadFunctions(application.name);
     };
 
-    const addFunctions = (_application: Application, functionss: IFunction[]) => {
-      return $q.when(functionss);
+    const addFunctions = (_application: Application, functions: IFunction[]) => {
+      return $q.when(functions);
     };
 
     const addTags = (application: Application) => {
-      //  EntityTagsReader.addTagsToFunctions(application);
+      EntityTagsReader.addTagsToFunctions(application);
     };
 
     ApplicationDataSourceRegistry.registerDataSource({
       key: 'functions',
-      label: 'Functions',
+      label: 'functions',
       sref: '.insight.functions',
       category: INFRASTRUCTURE_KEY,
       optional: true,

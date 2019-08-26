@@ -9,8 +9,19 @@ export interface IAmazonFunction extends IFunction {
   s3key: string;
   handler: string;
   functionName: string;
+  publish: boolean;
   description: string;
   tags: [{}];
+  memorySize: number;
+  timeout: number;
+  envVariables: {};
+  tracingConfig: {
+    mode: string;
+  };
+  deadLetterConfig: {
+    targetArn: string;
+  };
+  KMSKeyArn: string;
 }
 
 export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
@@ -20,12 +31,23 @@ export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
   s3key: string;
   handler: string;
   tags: [{}];
+  memorySize: number;
+  timeout: number;
   vpcId?: string;
-  environment: {
-    variables: {};
+  envVariables: {};
+  publish: boolean;
+  tracingConfig: {
+    mode: string;
   };
+  deadLetterConfig: {
+    targetArn: string;
+  };
+  KMSKeyArn: string;
 }
 
 export interface IAmazonFunctionDeleteCommand extends IFunctionDeleteCommand {
-  runtime: string;
+  cloudProvider: string;
+  functionName: string;
+  region: string;
+  credentials: string;
 }

@@ -47,7 +47,6 @@ export class Network extends React.Component<INetworkProps, INetworkState>
     VpcReader.listVpcs().then(Vpcs => {
       this.state.vpcOptions = Vpcs;
     });
-    // console.log(this.state.vpcOptions);
   }
   private getAllSubnets(): void {
     SubnetSelectInput.componentDidUpdate.then(Subnets => {

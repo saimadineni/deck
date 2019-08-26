@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Option } from 'react-select';
 
-import { FormikFormField, IWizardPageComponent, HelpField, MapEditor } from '@spinnaker/core';
-import { FormikProps, Field, FormikErrors } from 'formik';
+import { IWizardPageComponent, HelpField, MapEditor, FormikFormField, TextInput } from '@spinnaker/core';
+import { FormikProps } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
+import { values } from 'd3';
 
 export interface IFunctionEnvironmentVariablesProps {
   formik: FormikProps<IAmazonFunctionUpsertCommand>;
@@ -37,11 +38,15 @@ export class FunctionEnvironmentVariables
 
   private varsChanged = (envVar: { [key: string]: string }, duplicateKeys: boolean) => {
     this.duplicateKeys = duplicateKeys;
-    this.props.formik.setFieldValue('environment.variables', envVar);
-    console.log(envVar);
+    this.props.formik.setFieldValue('envVariables', envVar);
+  };
+
+  private kmsKeyChanged = (keyArn: string) => {
+    this.props.formik.setFieldValue('KMSKeyArn', keyArn);
   };
 
   public render() {
+    const { values } = this.props.formik;
     return (
       <div className="form-group">
         <div className="col-md-11">
@@ -50,6 +55,17 @@ export class FunctionEnvironmentVariables
             <HelpField id="aws.function.env.vars" />
           </div>
           <MapEditor model={{} as any} allowEmpty={true} onChange={this.varsChanged} />
+        </div>
+        <div className="col-md-11">
+          <div className="sp-margin-m-bottom">
+            <b>KMS Key</b>
+            <HelpField id="aws.function.kmsKeyArn" />
+            <TextInput
+              placeholder="Key ARN"
+              onChange={(event: any) => this.kmsKeyChanged(event.target.value)}
+              value={values.KMSKeyArn}
+            />
+          </div>
         </div>
       </div>
     );
