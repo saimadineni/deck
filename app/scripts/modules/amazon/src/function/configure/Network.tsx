@@ -9,8 +9,8 @@ import {
   FormikFormField,
   IWizardPageComponent,
   IVpc,
-  ISubnet, // adding this because there is an IVpc, might remove later
-  ISecurityGroup, // adding this because there is an IVpc, might remove later
+  ISubnet,
+  ISecurityGroup,
   HelpField,
   IAccount,
   IRegion,
@@ -29,11 +29,6 @@ import { FormikErrors, FormikProps } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { VpcReader } from 'amazon/vpc';
 import { SubnetSelectInput, SubnetSelectField } from 'amazon/subnet';
-
-export interface ISubnetOption {
-  subnetId: string;
-  vpcId: string;
-}
 
 export interface ISubnetOption {
   subnetId: string;
@@ -104,7 +99,11 @@ export class Network extends React.Component<INetworkProps, INetworkState>
       };
       subOptions.push(opt);
     });
-    return subOptions;
+    // we have to filter out any duplicate options
+    const uniqueSubOptions = Array.from(new Set(subOptions.map(a => a.subnetId))).map(subnetId => {
+      return subOptions.find(a => a.subnetId === subnetId);
+    });
+    return uniqueSubOptions;
   }
 
   public componentDidUpdate() {
@@ -182,7 +181,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
         });
       }
     });
-    console.log(' %%%%%%%%%%%%%%%%%%%%% ', sgOptions);
+    // console.log(' %%%%%%%%%%%%%%%%%%%%% ', sgOptions);
     return sgOptions;
   };
 
@@ -190,9 +189,9 @@ export class Network extends React.Component<INetworkProps, INetworkState>
     const { vpcOptions, subnets, securityGroups } = this.state;
     const { values } = this.props.formik;
     const subnetOptions = (subnets || []).map(this.toSubnetOption);
-    console.log('securityGroupoptions: ', securityGroups ? securityGroups : 'NOT YET');
+    // console.log('securityGroupoptions: ', securityGroups ? securityGroups : 'NOT YET');
     const sgOptions = securityGroups ? this.getSecurityGroupsByVpc(securityGroups) : [];
-    console.log('securityGroupoptions: ', sgOptions);
+    // console.log('securityGroupoptions: ', sgOptions);
     return (
       <div className="form-group">
         <div className="col-md-11">

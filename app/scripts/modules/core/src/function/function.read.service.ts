@@ -20,7 +20,7 @@ export class FunctionReader {
   public constructor(private $q: IQService, private functionTransformer: any) {}
 
   public loadFunctions(applicationName: string): IPromise<IFunctionSourceData[]> {
-    console.log('Function Reader in the read service: ' + applicationName);
+    // console.log('Function Reader in the read service: ' + applicationName);
 
     return API.all('functions')
       .withParams({ region: 'us-west-2' })

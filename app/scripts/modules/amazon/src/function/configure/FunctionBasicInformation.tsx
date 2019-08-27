@@ -155,7 +155,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
     const { app } = this.props;
     const { errors, values } = this.props.formik;
     const { accounts, regions } = this.state;
-    console.log('VALUES: ', values);
+    // console.log('VALUES: ', values);
     return (
       <div className="container-fluid form-horizontal ">
         <div className="sp-margin-m-bottom">
