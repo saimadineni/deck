@@ -72,12 +72,12 @@ export class Network extends React.Component<INetworkProps, INetworkState>
       this.state.vpcOptions = Vpcs;
     });
   }
-  private getAllSubnets(): void {
-    SubnetSelectInput.componentDidUpdate.then(Subnets => {
-      this.state.subnetOptions = Subnets;
-    });
-    // console.log(this.state.subnetOptions);
-  }
+  // private getAllSubnets(): void {
+  //   SubnetSelectInput.componentDidUpdate.then(Subnets => {
+  //     this.state.subnetOptions = Subnets;
+  //   });
+  //   // console.log(this.state.subnetOptions);
+  // }
 
   public validate(): FormikErrors<IAmazonFunctionUpsertCommand> {
     return {};
@@ -154,6 +154,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
     const subs = subnets.filter(function(s: ISubnetOption) {
       return s.vpcId.includes(vpcId);
     });
+    // console.log('%%%%%%%%%%: subnets: ', subs);
     this.setState({ subnets: subs });
   };
 
@@ -192,6 +193,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
     // console.log('securityGroupoptions: ', securityGroups ? securityGroups : 'NOT YET');
     const sgOptions = securityGroups ? this.getSecurityGroupsByVpc(securityGroups) : [];
     // console.log('securityGroupoptions: ', sgOptions);
+    // console.log('**********vpcOptions: ', vpcOptions);
     return (
       <div className="form-group">
         <div className="col-md-11">
@@ -244,7 +246,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
             </div>
             <div className="col-md-7">
               {sgOptions.length === 0 && (
-                <div className="form-control-static">No subnets found in the selected account/region/VPC</div>
+                <div className="form-control-static">No security groups found in the selected account/region/VPC</div>
               )}
               {values.credentials && values.credentials !== 'test' && values.vpcConfig.vpcId ? (
                 <TetheredSelect
