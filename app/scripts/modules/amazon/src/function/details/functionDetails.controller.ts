@@ -1,6 +1,5 @@
 import { IController, IPromise, IQService, IScope, module } from 'angular';
 import { StateService } from '@uirouter/angularjs';
-import { head, sortBy } from 'lodash';
 
 import {
   Application,

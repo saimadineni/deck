@@ -7,4 +7,3 @@ import { FUNCTION_STATES } from './function.states';
 export const FUNCTION_MODULE = 'spinnaker.core.function';
 
 module(FUNCTION_MODULE, [FUNCTION_DATA_SOURCE, FUNCTION_STATES]);
-console.log('Function module.ts loaded');

@@ -10,25 +10,18 @@ import {
   IWizardPageComponent,
   IVpc,
   ISubnet,
-  ISecurityGroup,
   HelpField,
   IAccount,
   IRegion,
-  ISubnet,
   ReactSelectInput,
   TetheredSelect,
   SubnetReader,
-  ISecurityGroupSummary,
-  ISecurityGroupsByAccount,
-  ISecurityGroup,
   ReactInjector,
-  IReaderSecurityGroup,
   ISecurityGroupsByAccountSourceData,
 } from '@spinnaker/core';
 import { FormikErrors, FormikProps } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { VpcReader } from 'amazon/vpc';
-import { SubnetSelectInput, SubnetSelectField } from 'amazon/subnet';
 
 export interface ISubnetOption {
   subnetId: string;

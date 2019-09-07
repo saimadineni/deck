@@ -1,6 +1,3 @@
-import * as React from 'react';
-const util = require('util');
-
 interface Function {
   account: String;
   codeSha256: String;
@@ -51,8 +48,6 @@ export const parseFunctionReturns: any = (functionArray: Array<Function>) => {
 
     returnArray[accountSeen[account]].region[accountRegionSeen[accountRegion]].functions.push(element);
   });
-
-  //console.log(accountRegionSeen);
 
   return returnArray;
 };
