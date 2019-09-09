@@ -40,11 +40,11 @@ function poolBuilder(functions: any[]) {
         })
         .value();
 
-        if (!poolUnits.length) {
-          poolUnits.push(poolUnitTemplate);
-        }
-  
-        return poolUnits;
+      if (!poolUnits.length) {
+        poolUnits.push(poolUnitTemplate);
+      }
+
+      return poolUnits;
     })
     .flatten()
     .value();
@@ -118,7 +118,7 @@ export class FunctionFilters extends React.Component<IFunctionFiltersProps, IFun
     }
     FunctionState.filterService.updateFunctionGroups(app);
 
-  const { region, account } = digestDependentFilters({
+    const { region, account } = digestDependentFilters({
       sortFilter: FunctionState.filterModel.asFilterModel.sortFilter,
       dependencyOrder: ['providerType', 'account', 'region'],
       pool: poolBuilder(app.loadBalancers.data),
@@ -156,14 +156,7 @@ export class FunctionFilters extends React.Component<IFunctionFiltersProps, IFun
 
   public render() {
     const fuctionsLoaded = this.props.app.functions.loaded;
-    const {
-      accountHeadings,
-      providerTypeHeadings,
-      regionHeadings,
-      detailHeadings,
-      sortFilter,
-      tags,
-    } = this.state;
+    const { accountHeadings, providerTypeHeadings, regionHeadings, detailHeadings, sortFilter, tags } = this.state;
 
     return (
       <div>

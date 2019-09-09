@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Option } from 'react-select';
 
-import { IWizardPageComponent, HelpField, MapEditor, FormikFormField, TextInput } from '@spinnaker/core';
+import { IWizardPageComponent, HelpField, MapEditor, TextInput } from '@spinnaker/core';
 import { FormikProps } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
-import { values } from 'd3';
 
 export interface IFunctionEnvironmentVariablesProps {
   formik: FormikProps<IAmazonFunctionUpsertCommand>;

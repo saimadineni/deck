@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Option } from 'react-select';
 
 import { FormikFormField, IWizardPageComponent, TextInput, NumberInput, HelpField } from '@spinnaker/core';
-import { FormikProps, Field, FormikErrors } from 'formik';
+import { FormikProps } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
 

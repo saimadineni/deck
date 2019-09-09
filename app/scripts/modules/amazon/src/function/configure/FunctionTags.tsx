@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Option } from 'react-select';
 
-import { FormikFormField, IWizardPageComponent, HelpField, MapEditor } from '@spinnaker/core';
-import { FormikProps, Field, FormikErrors } from 'formik';
+import { IWizardPageComponent, MapEditor } from '@spinnaker/core';
+import { FormikProps } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
 

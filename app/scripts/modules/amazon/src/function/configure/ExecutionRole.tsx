@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Option } from 'react-select';
 
 import { FormikFormField, IWizardPageComponent, HelpField, TextInput, ReactSelectInput } from '@spinnaker/core';
 import { FormikProps, Field, FormikErrors } from 'formik';

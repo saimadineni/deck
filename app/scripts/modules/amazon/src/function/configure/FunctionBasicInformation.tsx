@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import {
-  AccountSelectInput,
   FormikFormField,
   CheckboxInput,
   AccountService,
@@ -13,7 +12,6 @@ import {
   ReactSelectInput,
   RegionSelectField,
   Application,
-  IFunctionByAccount,
   ValidationMessage,
 } from '@spinnaker/core';
 
@@ -21,7 +19,6 @@ import { FormikProps, FormikErrors } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { IAmazonFunction } from 'amazon/domain';
 import { Subject, Observable } from 'rxjs';
-import { ISubnetOption } from 'amazon/loadBalancer/configure/common/LoadBalancerLocation';
 
 const availableRuntimes = [
   'nodejs',
@@ -102,7 +99,6 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
 
   public componentDidMount(): void {
     const formValues$ = this.props$.map(props => props.formik.values);
-    const appName$ = this.props$.map(props => props.app.name).distinctUntilChanged();
 
     const form = {
       account$: formValues$.map(x => x.credentials).distinctUntilChanged(),
@@ -152,7 +148,6 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
   };
 
   public render() {
-    const { app } = this.props;
     const { errors, values } = this.props.formik;
     const { accounts, regions } = this.state;
     // console.log('VALUES: ', values);
