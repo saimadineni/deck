@@ -77,6 +77,7 @@ export class AmazonFunctionDetails extends React.Component<IAmazonFunctionDetail
   public render() {
     const { app, functionObj: functionProp } = this.props;
     const { loading, functionDef } = this.state;
+    console.log('& &&&&&&&& & ', functionDef);
     if (loading) {
       // Don't bother computing any children if we're loading
       return <Details loading={loading} />;
