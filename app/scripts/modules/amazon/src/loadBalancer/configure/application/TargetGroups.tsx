@@ -87,7 +87,7 @@ export class TargetGroups extends React.Component<ITargetGroupsProps, ITargetGro
         tgErrors.name = 'Duplicate target group name in this load balancer.';
       }
 
-      ['port', 'healthCheckInterval', 'healthyThreshold', 'unhealthyThreshold'].forEach(key => {
+      ['healthCheckInterval', 'healthyThreshold', 'unhealthyThreshold'].forEach(key => {
         const err = spelNumberCheck(targetGroup[key]);
         if (err) {
           tgErrors[key] = err;
@@ -109,7 +109,6 @@ export class TargetGroups extends React.Component<ITargetGroupsProps, ITargetGro
       [
         'name',
         'protocol',
-        'port',
         'healthCheckInterval',
         'healthCheckPath',
         'healthCheckPort',
