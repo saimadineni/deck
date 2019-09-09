@@ -43,7 +43,6 @@ export class FunctionWriter {
     Object.assign(command, params);
     command.type = 'lambdaFunction';
     if (descriptor.includes('Update')) {
-      console.log('******** UPDATING ********* ');
       command.operation = 'updateLambdaFunctionConfiguration';
     } else {
       command.operation = 'createLambdaFunction';

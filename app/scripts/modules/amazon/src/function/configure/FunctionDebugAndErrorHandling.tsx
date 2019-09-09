@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Option } from 'react-select';
 
 import { FormikFormField, IWizardPageComponent, HelpField, TextInput, ReactSelectInput } from '@spinnaker/core';
 import { FormikProps } from 'formik';
@@ -32,7 +31,7 @@ export class FunctionDebugAndErrorHandling
   }
 
   public render() {
-    const { errors, values } = this.props.formik;
+    const { values } = this.props.formik;
     return (
       <div className="container-fluid form-horizontal ">
         <div className="sp-margin-m-bottom">

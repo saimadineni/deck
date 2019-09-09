@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cloneDeep, get } from 'lodash';
+import { cloneDeep } from 'lodash';
 import {
   IFunctionModalProps,
   FunctionWriter,
@@ -9,8 +9,6 @@ import {
   WizardModal,
   WizardPage,
   noop,
-  MapEditor,
-  HelpField,
   Application,
 } from '@spinnaker/core';
 
@@ -100,7 +98,7 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
   }
 
   private submit = (values: IAmazonFunctionUpsertCommand): void => {
-    const { app, forPipelineConfig, closeModal } = this.props;
+    const { app } = this.props;
     const { isNew } = this.state;
     const functionCommandFormatted = cloneDeep(values);
 

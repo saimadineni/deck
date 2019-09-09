@@ -1,5 +1,5 @@
 import { AWSProviderSettings } from 'amazon/aws.settings';
-import { Application, IFunctionSourceData } from '@spinnaker/core';
+import { Application } from '@spinnaker/core';
 
 import { IAmazonFunctionUpsertCommand, IAmazonFunction } from 'amazon/domain';
 
@@ -20,7 +20,6 @@ export class AwsFunctionTransformer {
       tags: functionDef.tags,
       memorySize: functionDef.memorySize,
       timeout: functionDef.timeout,
-      vpcId: functionDef.vpcId,
       envVariables: functionDef.environment ? functionDef.environment.variables : {},
       functionName: functionDef.functionName,
       region: functionDef.region,
@@ -33,11 +32,9 @@ export class AwsFunctionTransformer {
         targetArn: functionDef.deadLetterConfig ? functionDef.deadLetterConfig.targetArn : '',
       },
       KMSKeyArn: functionDef.KMSKeyArn ? functionDef.KMSKeyArn : '',
-      vpcConfig: {
-        subnetIds: functionDef.vpcConfig.subnetIds,
-        securityGroupIds: functionDef.vpcConfig.securityGroupIds,
-        vpcId: functionDef.vpcConfig.vpcId,
-      },
+      subnetIds: functionDef.vpcConfig ? functionDef.vpcConfig.subnetIds : [],
+      securityGroupIds: functionDef.vpcConfig ? functionDef.vpcConfig.securityGroupIds : [],
+      vpcId: functionDef.vpcConfig ? functionDef.vpcConfig.vpcId : '',
     };
     return toEdit;
   }
@@ -57,7 +54,7 @@ export class AwsFunctionTransformer {
       tags: [{}],
       memorySize: 128,
       description: '',
-      vpcId: '',
+
       credentials: defaultCredentials,
       cloudProvider: 'aws',
       detail: '',
@@ -70,11 +67,9 @@ export class AwsFunctionTransformer {
         mode: 'PassThrough',
       },
       KMSKeyArn: '',
-      vpcConfig: {
-        subnetIds: [],
-        securityGroupIds: [],
-        vpcId: '',
-      },
+      vpcId: '',
+      subnetIds: [],
+      securityGroupIds: [],
     };
   }
 }

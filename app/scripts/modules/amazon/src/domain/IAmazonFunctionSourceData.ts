@@ -1,5 +1,4 @@
 import { IFunctionSourceData } from '@spinnaker/core';
-import { string } from 'prop-types';
 
 export interface IAmazonFunctionSourceData extends IFunctionSourceData {
   account: string;
@@ -17,7 +16,6 @@ export interface IAmazonFunctionSourceData extends IFunctionSourceData {
   layers: string;
   lastModified: number;
   type: string;
-  vpcId: string;
   memorySize: string;
   revisionId: string;
   revisions: {};
@@ -32,5 +30,10 @@ export interface IAmazonFunctionSourceData extends IFunctionSourceData {
   envVariables: {};
   environment: {
     variables: {};
+  };
+  vpcConfig: {
+    subnetIds: [];
+    securityGroupIds: [];
+    vpcId: '';
   };
 }

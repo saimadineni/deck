@@ -46,11 +46,9 @@ export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
     targetArn: string;
   };
   KMSKeyArn: string;
-  vpcConfig: {
-    securityGroupIds: [];
-    subnetIds: [];
-    vpcId: string;
-  };
+  securityGroupIds: [];
+  subnetIds: [];
+  vpcId: string;
 }
 
 export interface IAmazonFunctionDeleteCommand extends IFunctionDeleteCommand {

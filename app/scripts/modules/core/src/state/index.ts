@@ -54,7 +54,7 @@ export function initialize(): void {
 
   FunctionState.filterModel = new FunctionFilterModel();
   FunctionState.filterService = new FunctionFilterService();
-  
+
   SecurityGroupState.filterModel = new SecurityGroupFilterModel();
   SecurityGroupState.filterService = new SecurityGroupFilterService();
   if (SETTINGS.checkForUpdates) {

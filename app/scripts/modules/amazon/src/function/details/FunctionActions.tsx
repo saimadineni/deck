@@ -1,16 +1,7 @@
 import * as React from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { get } from 'lodash';
 
-import {
-  Application,
-  ApplicationReader,
-  FunctionWriter,
-  SETTINGS,
-  NgReact,
-  ReactInjector,
-  HelpField,
-} from '@spinnaker/core';
+import { Application, ApplicationReader, FunctionWriter, SETTINGS, NgReact, ReactInjector } from '@spinnaker/core';
 
 import { IAmazonFunction, IAmazonFunctionDeleteCommand } from 'amazon/domain';
 
@@ -69,12 +60,6 @@ export class FunctionActions extends React.Component<IFunctionActionsProps, IFun
       application: app,
       title: 'Deleting ' + functionFromParams.functionName,
     };
-    console.log(
-      'DELETING functionDef.credentials: ',
-      functionDef.credentials,
-      ' functionDef.account: ',
-      functionDef.account,
-    );
     const command: IAmazonFunctionDeleteCommand = {
       cloudProvider: functionDef.cloudProvider,
       functionName: functionDef.functionName,

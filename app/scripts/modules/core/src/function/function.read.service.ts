@@ -1,7 +1,6 @@
 import { IPromise, IQService, module } from 'angular';
 
 import { API } from 'core/api/ApiService';
-import { IComponentName, NameUtils } from 'core/naming';
 import { IFunctionSourceData, IFunction } from 'core/domain';
 
 export interface IFunctionByAccount {

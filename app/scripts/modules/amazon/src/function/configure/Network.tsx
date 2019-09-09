@@ -10,25 +10,18 @@ import {
   IWizardPageComponent,
   IVpc,
   ISubnet,
-  ISecurityGroup,
   HelpField,
   IAccount,
   IRegion,
-  ISubnet,
   ReactSelectInput,
   TetheredSelect,
   SubnetReader,
-  ISecurityGroupSummary,
-  ISecurityGroupsByAccount,
-  ISecurityGroup,
   ReactInjector,
-  IReaderSecurityGroup,
   ISecurityGroupsByAccountSourceData,
 } from '@spinnaker/core';
 import { FormikErrors, FormikProps } from 'formik';
 import { IAmazonFunctionUpsertCommand } from 'amazon/index';
 import { VpcReader } from 'amazon/vpc';
-import { SubnetSelectInput, SubnetSelectField } from 'amazon/subnet';
 
 export interface ISubnetOption {
   subnetId: string;
@@ -140,16 +133,16 @@ export class Network extends React.Component<INetworkProps, INetworkState>
 
   private handleSubnetUpdate = (options: Array<Option<string>>) => {
     const subnetsSelected = options.map(o => o.value);
-    this.props.formik.setFieldValue('vpcConfig.subnetIds', subnetsSelected);
+    this.props.formik.setFieldValue('subnetIds', subnetsSelected);
   };
 
   private handleSecurityGroupsUpdate = (options: Array<Option<string>>) => {
     const sgSelected = options.map(o => o.value);
-    this.props.formik.setFieldValue('vpcConfig.securityGroupIds', sgSelected);
+    this.props.formik.setFieldValue('securityGroupIds', sgSelected);
   };
 
   private handleVpcChange = (vpcId: string): void => {
-    this.props.formik.setFieldValue('vpcConfig.vpcId', vpcId);
+    this.props.formik.setFieldValue('vpcId', vpcId);
     const { subnets } = this.state;
     const subs = subnets.filter(function(s: ISubnetOption) {
       return s.vpcId.includes(vpcId);
@@ -172,7 +165,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
             forOwn(sgByRegion, function(groups, region) {
               if (region === values.region) {
                 groups.forEach(function(group) {
-                  if (group.vpcId === values.vpcConfig.vpcId) {
+                  if (group.vpcId === values.vpcId) {
                     sgOptions.push({ value: group.id, label: group.name });
                   }
                 });
@@ -200,7 +193,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
           <div className="sp-margin-m-bottom">
             {values.credentials && (
               <FormikFormField
-                name="vpcConfig.vpcId"
+                name="vpcId"
                 label="VPC Id"
                 help={<HelpField id="aws.function.vpc.id" />}
                 fastField={false}
@@ -212,7 +205,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
                       .filter((v: IVpc) => v.account === values.credentials)
                       .map((v: IVpc) => v.id)}
                     clearable={true}
-                    value={values.vpcConfig.vpcId}
+                    value={values.vpcId}
                   />
                 )}
                 onChange={this.handleVpcChange}
@@ -229,11 +222,11 @@ export class Network extends React.Component<INetworkProps, INetworkState>
               {subnetOptions.length === 0 && (
                 <div className="form-control-static">No subnets found in the selected account/region/VPC</div>
               )}
-              {values.vpcConfig.vpcId ? (
+              {values.vpcId ? (
                 <TetheredSelect
                   multi={true}
                   options={subnetOptions}
-                  value={values.vpcConfig.subnetIds}
+                  value={values.subnetIds}
                   onChange={this.handleSubnetUpdate}
                 />
               ) : null}
@@ -248,11 +241,11 @@ export class Network extends React.Component<INetworkProps, INetworkState>
               {sgOptions.length === 0 && (
                 <div className="form-control-static">No security groups found in the selected account/region/VPC</div>
               )}
-              {values.credentials && values.credentials !== 'test' && values.vpcConfig.vpcId ? (
+              {values.credentials && values.credentials !== 'test' && values.vpcId ? (
                 <TetheredSelect
                   multi={true}
                   options={sgOptions}
-                  value={values.vpcConfig.securityGroupIds}
+                  value={values.securityGroupIds}
                   onChange={this.handleSecurityGroupsUpdate}
                 />
               ) : null}
