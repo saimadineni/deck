@@ -31,6 +31,7 @@ export class FunctionDebugAndErrorHandling
   }
 
   public render() {
+    const { values } = this.props.formik;
     return (
       <div className="container-fluid form-horizontal ">
         <div className="sp-margin-m-bottom">

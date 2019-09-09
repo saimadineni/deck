@@ -32,7 +32,6 @@ export class AwsFunctionTransformer {
         targetArn: functionDef.deadLetterConfig ? functionDef.deadLetterConfig.targetArn : '',
       },
       KMSKeyArn: functionDef.KMSKeyArn ? functionDef.KMSKeyArn : '',
-
       subnetIds: functionDef.vpcConfig ? functionDef.vpcConfig.subnetIds : [],
       securityGroupIds: functionDef.vpcConfig ? functionDef.vpcConfig.securityGroupIds : [],
       vpcId: functionDef.vpcConfig ? functionDef.vpcConfig.vpcId : '',
