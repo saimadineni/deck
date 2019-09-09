@@ -31,7 +31,7 @@ export interface ITargetGroupsState {
 export class TargetGroups extends React.Component<ITargetGroupsProps, ITargetGroupsState>
   implements IWizardPageComponent<IAmazonApplicationLoadBalancerUpsertCommand> {
   public protocols = ['HTTP', 'HTTPS'];
-  public targetTypes = ['instance', 'ip'];
+  public targetTypes = ['instance', 'ip', 'lambda'];
   private destroy$ = new Subject();
 
   constructor(props: ITargetGroupsProps) {
@@ -42,6 +42,7 @@ export class TargetGroups extends React.Component<ITargetGroupsProps, ITargetGro
       existingTargetGroupNames: {},
       oldTargetGroupCount,
     };
+    console.log('**********TargetGroups class**********');
   }
 
   private checkBetween(errors: any, object: any, fieldName: string, min: number, max: number) {
