@@ -29,7 +29,7 @@ const Content: React.FC = () => {
   const [functions, setFunctions] = React.useState([]);
 
   React.useEffect(() => {
-    //similar to componentDidMount
+    // similar to componentDidMount
     fetch('http://localhost:8084/functions')
       .then(resp => resp.json())
       .then(data => {

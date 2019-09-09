@@ -1,5 +1,5 @@
 import { AWSProviderSettings } from 'amazon/aws.settings';
-import { Application, IFunctionSourceData } from '@spinnaker/core';
+import { Application } from '@spinnaker/core';
 
 import { IAmazonFunctionUpsertCommand, IAmazonFunction } from 'amazon/domain';
 

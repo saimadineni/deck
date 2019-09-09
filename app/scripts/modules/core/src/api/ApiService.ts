@@ -4,7 +4,6 @@ import { AuthenticationInitializer } from '../authentication/AuthenticationIniti
 import { SETTINGS } from 'core/config/settings';
 import { ICache } from 'core/cache';
 import { isNil } from 'lodash';
-import { ConsoleReporter } from 'jasmine';
 
 export interface IRequestBuilder {
   config?: IRequestConfig;

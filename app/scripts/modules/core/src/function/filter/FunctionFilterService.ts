@@ -1,18 +1,15 @@
-import { chain, find, forOwn, groupBy, includes, intersection, map, some, sortBy, values, without } from 'lodash';
+import { chain, find, forOwn, groupBy, intersection, sortBy, values } from 'lodash';
 import { Debounce } from 'lodash-decorators';
-import { $log } from 'ngimport';
 import { Subject } from 'rxjs';
 
 import { Application } from 'core/application/application.model';
-import { FilterModelService, ISortFilter } from 'core/filterModel';
+import { FilterModelService } from 'core/filterModel';
 import { IFunction, IFunctionGroup } from 'core/domain';
 import { FunctionState } from 'core/state';
 
 export class FunctionFilterService {
   public groupsUpdatedStream: Subject<IFunctionGroup[]> = new Subject<IFunctionGroup[]>();
 
-  private isFilterable: (object: any) => boolean;
-  private getCheckValues: (object: any) => string[];
   private lastApplication: Application;
 
   constructor() {
