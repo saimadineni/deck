@@ -34,7 +34,7 @@ export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
   s3bucket: string;
   s3key: string;
   handler: string;
-  tags: [{}];
+  tags: [];
   memorySize: number;
   timeout: number;
   envVariables: {};
