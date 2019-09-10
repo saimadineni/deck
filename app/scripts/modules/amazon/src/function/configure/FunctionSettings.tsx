@@ -59,6 +59,14 @@ export class FunctionSettings extends React.Component<IFunctionSettingsProps, IF
             value={values.timeout}
           />
         </div>
+        <div className="sp-margin-m-bottom">
+          <FormikFormField
+            name="targetGroup"
+            label="Target Group Name"
+            help={<HelpField id="" />}
+            input={props => <TextInput {...props} />}
+          />
+        </div>
       </div>
     );
   }

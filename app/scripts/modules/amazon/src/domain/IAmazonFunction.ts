@@ -49,6 +49,7 @@ export interface IAmazonFunctionUpsertCommand extends IFunctionUpsertCommand {
   securityGroupIds: [];
   subnetIds: [];
   vpcId: string;
+  targetGroup: string;
 }
 
 export interface IAmazonFunctionDeleteCommand extends IFunctionDeleteCommand {
