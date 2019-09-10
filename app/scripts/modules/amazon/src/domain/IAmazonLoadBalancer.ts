@@ -179,6 +179,7 @@ export interface IALBTargetGroupDescription {
     stickinessType?: 'lb_cookie';
     // Defaults to 86400
     stickinessDuration?: number;
+    multiValueHeadersEnabled?: boolean;
   };
   // Defaults to 10
   healthCheckInterval?: number;

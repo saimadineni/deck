@@ -51,7 +51,7 @@ export class AwsFunctionTransformer {
       handler: '',
       functionName: '',
       publish: false,
-      tags: [{}],
+      tags: [],
       memorySize: 128,
       description: '',
 

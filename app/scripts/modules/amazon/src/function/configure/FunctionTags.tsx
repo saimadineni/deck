@@ -40,6 +40,7 @@ export class FunctionTags extends React.Component<IFunctionTagsProps, IFunctionT
 
   public render() {
     const { values } = this.props.formik;
+    console.log('tags: ', values.tags);
     return (
       <div className="form-group">
         <div className="col-md-11">

@@ -150,11 +150,11 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
   public render() {
     const { errors, values } = this.props.formik;
     const { accounts, regions } = this.state;
-    // console.log('VALUES: ', values);
     return (
       <div className="container-fluid form-horizontal ">
         <div className="sp-margin-m-bottom">
           <FormikFormField
+            fastField={false}
             name="credentials"
             label="Account"
             input={props => (
@@ -166,16 +166,8 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
                 clearable={true}
               />
             )}
-            // Dont know why this is not working :(
-            // input={props => <AccountSelectInput
-            //                   value={values.credentials}
-            //                   accounts={accounts.map((acc: IAccount) => acc.name)}
-            //                   provider="aws"
-            //                 />
-            //        }
           />
         </div>
-
         <div className="sp-margin-m-bottom">
           <RegionSelectField
             labelColumns={3}
