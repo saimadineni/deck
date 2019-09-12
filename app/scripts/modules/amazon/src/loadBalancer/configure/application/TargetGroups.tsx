@@ -129,7 +129,6 @@ export class TargetGroups extends React.Component<ITargetGroupsProps, ITargetGro
     if (hasErrors) {
       errors.targetGroups = targetGroupsErrors;
     }
-    console.log('Validation errors: ', errors);
     return errors;
   }
 
@@ -167,7 +166,6 @@ export class TargetGroups extends React.Component<ITargetGroupsProps, ITargetGro
     const { setFieldValue, values } = this.props.formik;
     const targetGroup = values.targetGroups[index];
     if (field === 'targetType' && value === 'lambda') {
-      console.log(' targetGroup.port  : ', targetGroup.port);
       delete targetGroup.port;
     }
     set(targetGroup, field, value);
