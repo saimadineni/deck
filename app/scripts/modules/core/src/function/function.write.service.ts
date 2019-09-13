@@ -41,13 +41,6 @@ export class FunctionWriter {
     params: any = {},
   ): IPromise<ITask> {
     Object.assign(command, params);
-    command.type = 'lambdaFunction';
-    if (descriptor.includes('Update')) {
-      command.operation = 'updateLambdaFunctionConfiguration';
-    } else {
-      command.operation = 'createLambdaFunction';
-    }
-
     return TaskExecutor.executeTask({
       job: [command],
       application,

@@ -97,6 +97,23 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
     this.refreshUnsubscribe = this.props.app.functions.onNextRefresh(null, () => this.onApplicationRefresh(values));
   }
 
+  private checkForS3Update(functionCommandFormatted: IAmazonFunctionUpsertCommand, descriptor: string): void {
+    if (descriptor.includes('Update') && (functionCommandFormatted.s3bucket || functionCommandFormatted.s3key)) {
+      functionCommandFormatted.operation = 'updateLambdaFunctionCode';
+      console.log('Submitting 2nd Operation ************ ');
+      const { app } = this.props;
+      const taskMonitor = new TaskMonitor({
+        application: app,
+        title: 'Updating your function code',
+        modalInstance: TaskMonitor.modalInstanceEmulation(() => this.props.dismissModal()),
+      });
+      taskMonitor.submit(() => {
+        return FunctionWriter.upsertFunction(functionCommandFormatted, app, descriptor);
+      });
+    }
+    this.onTaskComplete(functionCommandFormatted);
+  }
+
   private submit = (values: IAmazonFunctionUpsertCommand): void => {
     const { app } = this.props;
     const { isNew } = this.state;
@@ -108,13 +125,18 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
       application: app,
       title: `${isNew ? 'Creating' : 'Updating'} your function`,
       modalInstance: TaskMonitor.modalInstanceEmulation(() => this.props.dismissModal()),
-      onTaskComplete: () => this.onTaskComplete(functionCommandFormatted),
+      onTaskComplete: () => this.checkForS3Update(functionCommandFormatted, descriptor),
     });
 
     taskMonitor.submit(() => {
+      functionCommandFormatted.type = 'lambdaFunction';
+      if (descriptor.includes('Update')) {
+        functionCommandFormatted.operation = 'updateLambdaFunctionConfiguration';
+      } else {
+        functionCommandFormatted.operation = 'createLambdaFunction';
+      }
       return FunctionWriter.upsertFunction(functionCommandFormatted, app, descriptor);
     });
-
     this.setState({ taskMonitor });
   };
 
