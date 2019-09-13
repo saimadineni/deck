@@ -65,12 +65,6 @@ export class Network extends React.Component<INetworkProps, INetworkState>
       this.state.vpcOptions = Vpcs;
     });
   }
-  // private getAllSubnets(): void {
-  //   SubnetSelectInput.componentDidUpdate.then(Subnets => {
-  //     this.state.subnetOptions = Subnets;
-  //   });
-  //   // console.log(this.state.subnetOptions);
-  // }
 
   public validate(): FormikErrors<IAmazonFunctionUpsertCommand> {
     return {};
@@ -147,7 +141,6 @@ export class Network extends React.Component<INetworkProps, INetworkState>
     const subs = subnets.filter(function(s: ISubnetOption) {
       return s.vpcId.includes(vpcId);
     });
-    // console.log('%%%%%%%%%%: subnets: ', subs);
     this.setState({ subnets: subs });
   };
 
@@ -175,7 +168,6 @@ export class Network extends React.Component<INetworkProps, INetworkState>
         });
       }
     });
-    // console.log(' %%%%%%%%%%%%%%%%%%%%% ', sgOptions);
     return sgOptions;
   };
 
@@ -183,10 +175,7 @@ export class Network extends React.Component<INetworkProps, INetworkState>
     const { vpcOptions, subnets, securityGroups } = this.state;
     const { values } = this.props.formik;
     const subnetOptions = (subnets || []).map(this.toSubnetOption);
-    // console.log('securityGroupoptions: ', securityGroups ? securityGroups : 'NOT YET');
     const sgOptions = securityGroups ? this.getSecurityGroupsByVpc(securityGroups) : [];
-    // console.log('securityGroupoptions: ', sgOptions);
-    // console.log('**********vpcOptions: ', vpcOptions);
     return (
       <div className="form-group">
         <div className="col-md-11">
