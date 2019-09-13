@@ -60,9 +60,7 @@ export class AwsFunctionTransformer {
       detail: '',
       region: defaultRegion,
       envVariables: {},
-      deadLetterConfig: {
-        targetArn: '',
-      },
+
       tracingConfig: {
         mode: 'PassThrough',
       },
