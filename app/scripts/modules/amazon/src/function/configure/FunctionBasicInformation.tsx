@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import * as classNames from 'classnames';
 import {
   FormikFormField,
   CheckboxInput,
@@ -150,23 +150,42 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
   public render() {
     const { errors, values } = this.props.formik;
     const { accounts, regions } = this.state;
+    const className = classNames({
+      'col-md-12': true,
+      well: true,
+      'alert-danger': errors.name,
+      'alert-info': !errors.name,
+    });
     return (
       <div className="container-fluid form-horizontal ">
-        <div className="sp-margin-m-bottom">
-          <FormikFormField
-            fastField={false}
-            name="credentials"
-            label="Account"
-            input={props => (
-              <ReactSelectInput
-                {...props}
-                inputClassName="cloudfoundry-react-select"
-                value={values.credentials}
-                stringOptions={accounts.map((acc: IAccount) => acc.name)}
-                clearable={true}
-              />
-            )}
-          />
+        <div className="form-group">
+          {this.props.isNew && (
+            <div className={className}>
+              <strong>Your function will be named: </strong>
+              <span>
+                {this.props.app.name}-{values.functionName}
+              </span>
+              {errors.name && <ValidationMessage type="error" message={errors.name} />}
+            </div>
+          )}
+        </div>
+        <div className="form-group">
+          <div className="sp-margin-m-bottom">
+            <FormikFormField
+              fastField={false}
+              name="credentials"
+              label="Account"
+              input={props => (
+                <ReactSelectInput
+                  {...props}
+                  inputClassName="cloudfoundry-react-select"
+                  value={values.credentials}
+                  stringOptions={accounts.map((acc: IAccount) => acc.name)}
+                  clearable={true}
+                />
+              )}
+            />
+          </div>
         </div>
         <div className="sp-margin-m-bottom">
           <RegionSelectField
@@ -184,7 +203,7 @@ export class FunctionBasicInformation extends React.Component<IFunctionProps, IF
             name="functionName"
             label="Function Name"
             help={<HelpField id="aws.function.name" />}
-            input={props => <TextInput {...props} placeholder={this.props.app.name.concat('-')} />}
+            input={props => <TextInput {...props} />}
           />
         </div>
         {errors.name && <ValidationMessage type="error" message={errors.name} />}

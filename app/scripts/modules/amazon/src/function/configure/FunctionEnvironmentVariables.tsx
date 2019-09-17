@@ -40,7 +40,7 @@ export class FunctionEnvironmentVariables
   };
 
   private kmsKeyChanged = (keyArn: string) => {
-    this.props.formik.setFieldValue('KMSKeyArn', keyArn);
+    this.props.formik.setFieldValue('encryKMSKeyArn', keyArn);
   };
 
   public render() {

@@ -101,7 +101,9 @@ export class CreateLambdaFunction extends React.Component<IAmazonCreateFunctionP
     const { app } = this.props;
     const { isNew } = this.state;
     const functionCommandFormatted = cloneDeep(values);
-
+    if (isNew && functionCommandFormatted.functionName.indexOf(app.name) != 0) {
+      functionCommandFormatted.functionName = app.name.concat('-').concat(functionCommandFormatted.functionName);
+    }
     const descriptor = isNew ? 'Create' : 'Update';
 
     const taskMonitor = new TaskMonitor({

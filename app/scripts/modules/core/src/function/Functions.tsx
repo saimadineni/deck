@@ -112,7 +112,7 @@ export class Functions extends React.Component<IFunctionsProps, IFunctionsState>
     return (
       <div className="main-content load-balancers">
         <div className="header row header-clusters">
-          <div className="col-lg-4 col-md-2">
+          <div className="col-lg-12 col-md-2">
             <div className="form-inline clearfix filters" />
             <div className="application-actions">
               <CreateFunctionButton app={this.props.app} />
